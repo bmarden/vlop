@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:vlop/screens/home/home.dart';
+import 'package:vlop/screens/wrapper.dart';
+import 'package:provider/provider.dart';
+import 'package:vlop/models/user.dart';
+import 'package:vlop/services/auth_service.dart';
 
 void main() => runApp(MyApp());
 
@@ -7,12 +10,15 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return StreamProvider<User>.value(
+      value: AuthService().getUser,
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: Wrapper(),
       ),
-      home: HomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
