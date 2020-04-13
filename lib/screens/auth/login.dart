@@ -15,31 +15,32 @@ class _LoginState extends State<Login> {
   final _auth = AuthService();
 
   @override
-  void initState() {
-    super.initState();
-    setState(() {});
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.deepOrange[500],
-        title: Text("Login"),
-      ),
-      body: Center(
-        child: RaisedButton(
-          child: Text("Log in"),
-          onPressed: () async {
-            // Await the anonymous sign in, print result of User if successful
-            dynamic result = await _auth.anonymousSignIn();
-            if (result == null) {
-              print("Failed to sign in");
-            } else {
-              print("signed in");
-              print(result);
-            }
-          },
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  RaisedButton(
+                    child: Text("Log in"),
+                    onPressed: () async {
+                      // Await the anonymous sign in, print result of User if successful
+                      dynamic result = await _auth.anonymousSignIn();
+                      if (result == null) {
+                        print("Failed to sign in");
+                      } else {
+                        print("signed in");
+                        print(result);
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

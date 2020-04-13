@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vlop/screens/auth/login.dart';
+import 'package:vlop/screens/auth/register.dart';
 
 class AuthSelect extends StatefulWidget {
   @override
@@ -25,8 +26,6 @@ class _AuthSelect extends State<AuthSelect> {
     //  return Login(toggleView: toggleView);
     // }
     // Only return to Login view for now
-    return Container(
-      child: Login(),
-    );
+    return Register();
   }
 }
