@@ -3,7 +3,6 @@ import 'package:string_validator/string_validator.dart';
 import 'package:vlop/services/auth_service.dart';
 import 'package:vlop/utilities/constants.dart';
 import 'package:vlop/utilities/loading.dart';
-import 'widgets.dart';
 
 class Register extends StatefulWidget {
   // Declare the function from auth_view. Will be used to change to login screen
@@ -17,6 +16,9 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
   final _formKey = GlobalKey<FormState>();
   final AuthService _auth = AuthService();
+
+  final TextEditingController _pass = TextEditingController();
+  final TextEditingController _confirmPass = TextEditingController();
 
   String _email;
   String _password;
@@ -38,7 +40,7 @@ class _RegisterState extends State<Register> {
   void submitForm() async {
     setState(() => _loading = true);
     if (validateForm()) {
-      dynamic result = _auth.registerNewUser(_email, _password);
+      dynamic result = _auth.registerNewUser(_email, _userName, _password);
       if (result == null) {
         print("ERROR: couldn't register user");
       } else {
@@ -142,6 +144,7 @@ class _RegisterState extends State<Register> {
           decoration: kBoxStyle,
           height: 60.0,
           child: TextFormField(
+            controller: confirmPwd ? _confirmPass : _pass,
             obscureText: true,
             keyboardType: TextInputType.text,
             style: TextStyle(color: Colors.white),
@@ -156,8 +159,14 @@ class _RegisterState extends State<Register> {
               hintStyle: kHintText,
             ),
             validator: (String value) {
-              if (value.length < 6) {
-                return "Password must be longer than 6 characters";
+              if (confirmPwd) {
+                if (_pass.text != _confirmPass.text) {
+                  return "Passwords must match";
+                }
+              } else {
+                if (value.length < 6) {
+                  return "Password must be longer than 6 characters";
+                }
               }
               return null;
             },

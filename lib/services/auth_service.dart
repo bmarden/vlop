@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:vlop/models/user.dart';
+import 'package:vlop/services/database.dart';
 
 class AuthService {
   FirebaseAuth _auth = FirebaseAuth.instance;
@@ -29,11 +30,15 @@ class AuthService {
   }
 
   // Create a new Firebase user
-  Future registerNewUser(String email, String password) async {
+  Future registerNewUser(String email, String userName, String password) async {
+    // Attempt to register new Firebase user
     try {
       AuthResult result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       FirebaseUser newUser = result.user;
+
+      // If Firebase registration successful, register user in 'users' collection
+      await DbService(uid: newUser.uid).updateUser(email, userName);
       return _userFromFirebase(newUser);
     } catch (e) {
       print(e.toString());
