@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:string_validator/string_validator.dart';
 import 'package:vlop/services/auth_service.dart';
 import 'package:vlop/utilities/constants.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:vlop/utilities/loading.dart';
+import 'widgets.dart';
 
 class Register extends StatefulWidget {
   // Declare the function from auth_view. Will be used to change to login screen
@@ -18,86 +20,240 @@ class _RegisterState extends State<Register> {
 
   String _email;
   String _password;
+  String _passwordConfirm;
   String _userName;
+  bool _loading = false;
+  bool _validateState = false;
+  String error = '';
+
+  bool validateForm() {
+    final form = _formKey.currentState;
+    if (form.validate()) {
+      form.save();
+      return true;
+    }
+    return false;
+  }
+
+  void submitForm() async {
+    setState(() => _loading = true);
+    if (validateForm()) {
+      dynamic result = _auth.registerNewUser(_email, _password);
+      if (result == null) {
+        print("ERROR: couldn't register user");
+      } else {
+        setState(() => _validateState = true);
+      }
+    } else {
+      _formKey.currentState.reset();
+      setState(() => _loading = false);
+    }
+  }
+
+  Widget _userNameTB() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          "User Name",
+          style: kLabelStyle,
+        ),
+        SizedBox(height: 10.0),
+        Container(
+          alignment: Alignment.centerLeft,
+          decoration: kBoxStyle,
+          height: 60.0,
+          child: TextFormField(
+            keyboardType: TextInputType.text,
+            style: TextStyle(color: Colors.white),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.only(top: 14.0),
+              prefixIcon: Icon(
+                Icons.person,
+                color: Colors.grey,
+              ),
+              hintText: "Enter a user name",
+              hintStyle: kHintText,
+            ),
+            validator: (value) {
+              if (value.isEmpty) {
+                return "User name can't be empty";
+              }
+              return null;
+            },
+            onSaved: (value) => _userName = value.trim(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _emailTB() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          "Email",
+          style: kLabelStyle,
+        ),
+        SizedBox(height: 10.0),
+        Container(
+          alignment: Alignment.centerLeft,
+          decoration: kBoxStyle,
+          height: 60.0,
+          child: TextFormField(
+            keyboardType: TextInputType.text,
+            style: TextStyle(color: Colors.white),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.only(top: 14.0),
+              prefixIcon: Icon(
+                Icons.person,
+                color: Colors.grey,
+              ),
+              hintText: "Enter your email",
+              hintStyle: kHintText,
+            ),
+            validator: (value) {
+              if (!isEmail(value)) {
+                return "Enter a valid email";
+              }
+              return null;
+            },
+            onSaved: (value) => _email = value.trim(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _passwordTB(bool confirmPwd) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          confirmPwd ? "Confirm Password" : "Password",
+          style: kLabelStyle,
+        ),
+        SizedBox(height: 10.0),
+        Container(
+          alignment: Alignment.centerLeft,
+          decoration: kBoxStyle,
+          height: 60.0,
+          child: TextFormField(
+            obscureText: true,
+            keyboardType: TextInputType.text,
+            style: TextStyle(color: Colors.white),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.only(top: 14.0),
+              prefixIcon: Icon(
+                Icons.person,
+                color: Colors.grey,
+              ),
+              hintText: "Enter a password",
+              hintStyle: kHintText,
+            ),
+            validator: (String value) {
+              if (value.length < 6) {
+                return "Password must be longer than 6 characters";
+              }
+              return null;
+            },
+            onSaved: (val) {
+              if (confirmPwd) {
+                _passwordConfirm = val.trim();
+              } else {
+                _password = val.trim();
+              }
+            },
+          ),
+        ),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: <Widget>[
-          Container(
-            height: double.infinity,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Color(0xFF73AEF5),
-                  Color(0xFF61A4F1),
-                  Color(0xFF478DE0),
-                  Color(0xFF398AE5),
-                ],
-                stops: [0.1, 0.4, 0.7, 0.9],
-              ),
-            ),
-          ),
-          Container(
-            height: double.infinity,
-            child: SingleChildScrollView(
-              physics: AlwaysScrollableScrollPhysics(),
-              padding: EdgeInsets.symmetric(
-                horizontal: 40.0,
-                vertical: 120.0,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    "Register",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'OpenSans',
-                      fontSize: 30.0,
-                      fontWeight: FontWeight.bold,
+    return _loading
+        ? Loading()
+        : Scaffold(
+            body: Stack(
+              children: <Widget>[
+                Container(
+                  height: double.infinity,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Color(0xFF73AEF5),
+                        Color(0xFF61A4F1),
+                        Color(0xFF478DE0),
+                        Color(0xFF398AE5),
+                      ],
+                      stops: [0.1, 0.4, 0.7, 0.9],
                     ),
                   ),
-                  SizedBox(height: 30.0),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        "User Name",
-                        style: customLabelStyle,
+                ),
+                Form(
+                  key: _formKey,
+                  autovalidate: _validateState,
+                  child: Container(
+                    height: double.infinity,
+                    child: SingleChildScrollView(
+                      physics: AlwaysScrollableScrollPhysics(),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 40.0,
+                        vertical: 100.0,
                       ),
-                      SizedBox(height: 10.0),
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        decoration: customBoxStyle,
-                        height: 60.0,
-                        child: TextField(
-                          keyboardType: TextInputType.text,
-                          style: TextStyle(color: Colors.white),
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.only(top: 14.0),
-                            prefixIcon: Icon(
-                              Icons.person,
-                              color: Colors.grey,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            "Register",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'OpenSans',
+                              fontSize: 30.0,
+                              fontWeight: FontWeight.bold,
                             ),
-                            hintText: "Enter a user name",
-                            hintStyle: customHintText,
                           ),
-                        ),
+                          SizedBox(height: 30.0),
+                          _userNameTB(),
+                          SizedBox(height: 25.0),
+                          _emailTB(),
+                          SizedBox(height: 25.0),
+                          _passwordTB(false),
+                          SizedBox(height: 25.0),
+                          _passwordTB(true),
+                          Container(
+                            padding: EdgeInsets.symmetric(vertical: 25.0),
+                            width: 140.0,
+                            height: 96.0,
+                            child: RaisedButton(
+                              elevation: 3.0,
+                              onPressed: submitForm,
+                              padding: EdgeInsets.all(10.0),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30.0),
+                              ),
+                              color: Colors.grey[800],
+                              child: Text(
+                                'Submit',
+                                style: kLabelStyle,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
-    );
+          );
   }
 }

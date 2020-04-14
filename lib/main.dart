@@ -3,6 +3,7 @@ import 'package:vlop/screens/wrapper.dart';
 import 'package:provider/provider.dart';
 import 'package:vlop/models/user.dart';
 import 'package:vlop/services/auth_service.dart';
+import 'package:vlop/utilities/theme.dart';
 
 void main() => runApp(MyApp());
 
@@ -14,9 +15,7 @@ class MyApp extends StatelessWidget {
       value: AuthService().getUser,
       child: MaterialApp(
         title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
+        theme: kThemeData,
         home: Wrapper(),
       ),
     );
