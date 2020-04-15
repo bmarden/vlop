@@ -47,8 +47,10 @@ class _RegisterState extends State<Register> {
         setState(() => _validateState = true);
       }
     } else {
-      _formKey.currentState.reset();
-      setState(() => _loading = false);
+      setState(() {
+        _loading = false;
+        _validateState = false;
+      });
     }
   }
 
@@ -118,7 +120,7 @@ class _RegisterState extends State<Register> {
               hintStyle: kHintText,
             ),
             validator: (value) {
-              if (!isEmail(value)) {
+              if (!isEmail(value.trim())) {
                 return "Enter a valid email";
               }
               return null;
