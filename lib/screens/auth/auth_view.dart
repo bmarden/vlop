@@ -9,7 +9,7 @@ class AuthSelect extends StatefulWidget {
 
 class _AuthSelect extends State<AuthSelect> {
   // Selecter, determines which screen to show
-  bool register = false;
+  bool register = true;
 
   // This function will give a way to switch between the login and register screens
   // within each of those classes
@@ -20,12 +20,10 @@ class _AuthSelect extends State<AuthSelect> {
 
   @override
   Widget build(BuildContext context) {
-    //if (register) {
-    //  return Register(toggleView: toggleView);
-    //} else {
-    //  return Login(toggleView: toggleView);
-    // }
-    // Only return to Login view for now
-    return Register();
+    if (register) {
+      return Register(toggleView: toggleView);
+    } else {
+      return Login(toggleView: toggleView);
+    }
   }
 }

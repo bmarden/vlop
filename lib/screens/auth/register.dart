@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:string_validator/string_validator.dart';
 import 'package:vlop/services/auth_service.dart';
@@ -21,8 +22,6 @@ class _RegisterState extends State<Register> {
   final TextEditingController _confirmPass = TextEditingController();
 
   String _email;
-  String _password;
-  String _passwordConfirm;
   String _userName;
   bool _loading = false;
   bool _validateState = false;
@@ -40,7 +39,7 @@ class _RegisterState extends State<Register> {
   void submitForm() async {
     setState(() => _loading = true);
     if (validateForm()) {
-      dynamic result = _auth.registerNewUser(_email, _userName, _password);
+      dynamic result = _auth.registerNewUser(_email, _userName, _pass.text);
       if (result == null) {
         print("ERROR: couldn't register user");
       } else {
@@ -133,13 +132,53 @@ class _RegisterState extends State<Register> {
           },
           onSaved: (val) {
             if (confirmPwd) {
-              _passwordConfirm = val.trim();
+              _pass.text = val.trim();
             } else {
-              _password = val.trim();
+              _confirmPass.text = val.trim();
             }
           },
         ),
       ],
+    );
+  }
+
+  Widget _submitBtn() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 25.0),
+      width: 140.0,
+      height: 96.0,
+      child: RaisedButton(
+        elevation: 3.0,
+        onPressed: submitForm,
+        padding: EdgeInsets.all(10.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.0),
+        ),
+        color: Colors.grey[800],
+        child: Text(
+          'Submit',
+          style: kLabelStyle,
+        ),
+      ),
+    );
+  }
+
+  Widget _switchToSignIn() {
+    return RichText(
+      text: TextSpan(
+        text: "Already have an account? ",
+        style: TextStyle(fontSize: 16),
+        children: [
+          TextSpan(
+            text: 'Sign in Here!',
+            style: kSmallText,
+            recognizer: TapGestureRecognizer()
+              ..onTap = () {
+                widget.toggleView();
+              },
+          ),
+        ],
+      ),
     );
   }
 
@@ -198,24 +237,8 @@ class _RegisterState extends State<Register> {
                           _passwordTB(false),
                           SizedBox(height: 25.0),
                           _passwordTB(true),
-                          Container(
-                            padding: EdgeInsets.symmetric(vertical: 25.0),
-                            width: 140.0,
-                            height: 96.0,
-                            child: RaisedButton(
-                              elevation: 3.0,
-                              onPressed: submitForm,
-                              padding: EdgeInsets.all(10.0),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0),
-                              ),
-                              color: Colors.grey[800],
-                              child: Text(
-                                'Submit',
-                                style: kLabelStyle,
-                              ),
-                            ),
-                          ),
+                          _submitBtn(),
+                          _switchToSignIn(),
                         ],
                       ),
                     ),

@@ -11,6 +11,13 @@ final kLabelStyle = TextStyle(
   fontFamily: 'OpenSans',
 );
 
+final kSmallText = TextStyle(
+  color: Colors.white38,
+  fontSize: 14,
+  fontWeight: FontWeight.bold,
+  fontFamily: 'OpenSans',
+);
+
 final kBoxStyle = BoxDecoration(
   color: Color(0xFF6CA8F1),
   borderRadius: BorderRadius.circular(14.0),
@@ -23,6 +30,7 @@ final kBoxStyle = BoxDecoration(
   ],
 );
 
+// Custom InputDecoration for register/login forms
 InputDecoration kInputDecoration(String hint, IconData icon) {
   return InputDecoration(
     border: OutlineInputBorder(

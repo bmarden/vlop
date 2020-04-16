@@ -25,16 +25,9 @@ class _LoginState extends State<Login> {
               Row(
                 children: <Widget>[
                   RaisedButton(
-                    child: Text("Log in"),
-                    onPressed: () async {
-                      // Await the anonymous sign in, print result of User if successful
-                      dynamic result = await _auth.anonymousSignIn();
-                      if (result == null) {
-                        print("Failed to sign in");
-                      } else {
-                        print("signed in");
-                        print(result);
-                      }
+                    child: Text("Register"),
+                    onPressed: () {
+                      widget.toggleView();
                     },
                   ),
                 ],
