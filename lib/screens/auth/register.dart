@@ -27,6 +27,8 @@ class _RegisterState extends State<Register> {
   bool _validateState = false;
   String error = '';
 
+  // TODO: Add setState and Dispose
+
   bool validateForm() {
     final form = _formKey.currentState;
     if (form.validate()) {
@@ -170,13 +172,10 @@ class _RegisterState extends State<Register> {
         style: TextStyle(fontSize: 16),
         children: [
           TextSpan(
-            text: 'Sign in Here!',
-            style: kSmallText,
-            recognizer: TapGestureRecognizer()
-              ..onTap = () {
-                widget.toggleView();
-              },
-          ),
+              text: 'Sign in Here!',
+              style: kSmallText,
+              recognizer: TapGestureRecognizer()
+                ..onTap = () => widget.toggleView()),
         ],
       ),
     );
@@ -229,7 +228,7 @@ class _RegisterState extends State<Register> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(height: 30.0),
+                          SizedBox(height: 25.0),
                           _userNameTB(),
                           SizedBox(height: 25.0),
                           _emailTB(),

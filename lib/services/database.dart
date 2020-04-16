@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:vlop/models/user.dart';
 
 class DbService {
   final String uid;
