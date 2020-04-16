@@ -13,7 +13,7 @@ final kLabelStyle = TextStyle(
 
 final kBoxStyle = BoxDecoration(
   color: Color(0xFF6CA8F1),
-  borderRadius: BorderRadius.circular(10.0),
+  borderRadius: BorderRadius.circular(14.0),
   boxShadow: [
     BoxShadow(
       color: Colors.black12,
@@ -22,3 +22,28 @@ final kBoxStyle = BoxDecoration(
     ),
   ],
 );
+
+InputDecoration kInputDecoration(String hint, IconData icon) {
+  return InputDecoration(
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(30.0),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(30.0),
+      borderSide: BorderSide(color: Colors.blue[100]),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(30.0),
+      borderSide: BorderSide(color: Colors.grey[600]),
+    ),
+    fillColor: Color(0xFF6CA8F1),
+    filled: true,
+    contentPadding: EdgeInsets.only(top: 14.0),
+    prefixIcon: Icon(
+      icon,
+      color: Colors.grey[800],
+    ),
+    hintText: hint,
+    hintStyle: kHintText,
+  );
+}

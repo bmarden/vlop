@@ -63,31 +63,17 @@ class _RegisterState extends State<Register> {
           style: kLabelStyle,
         ),
         SizedBox(height: 10.0),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: kBoxStyle,
-          height: 60.0,
-          child: TextFormField(
-            keyboardType: TextInputType.text,
-            style: TextStyle(color: Colors.white),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                Icons.person,
-                color: Colors.grey,
-              ),
-              hintText: "Enter a user name",
-              hintStyle: kHintText,
-            ),
-            validator: (value) {
-              if (value.isEmpty) {
-                return "User name can't be empty";
-              }
-              return null;
-            },
-            onSaved: (value) => _userName = value.trim(),
-          ),
+        TextFormField(
+          keyboardType: TextInputType.text,
+          style: TextStyle(color: Colors.white),
+          decoration: kInputDecoration("Enter a user name", Icons.person),
+          validator: (value) {
+            if (value.isEmpty) {
+              return "User name can't be empty";
+            }
+            return null;
+          },
+          onSaved: (value) => _userName = value.trim(),
         ),
       ],
     );
@@ -102,31 +88,17 @@ class _RegisterState extends State<Register> {
           style: kLabelStyle,
         ),
         SizedBox(height: 10.0),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: kBoxStyle,
-          height: 60.0,
-          child: TextFormField(
-            keyboardType: TextInputType.text,
-            style: TextStyle(color: Colors.white),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                Icons.person,
-                color: Colors.grey,
-              ),
-              hintText: "Enter your email",
-              hintStyle: kHintText,
-            ),
-            validator: (value) {
-              if (!isEmail(value.trim())) {
-                return "Enter a valid email";
-              }
-              return null;
-            },
-            onSaved: (value) => _email = value.trim(),
-          ),
+        TextFormField(
+          keyboardType: TextInputType.text,
+          style: TextStyle(color: Colors.white),
+          decoration: kInputDecoration("Enter your email", Icons.mail),
+          validator: (value) {
+            if (!isEmail(value.trim())) {
+              return "Enter a valid email";
+            }
+            return null;
+          },
+          onSaved: (value) => _email = value.trim(),
         ),
       ],
     );
@@ -141,45 +113,31 @@ class _RegisterState extends State<Register> {
           style: kLabelStyle,
         ),
         SizedBox(height: 10.0),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: kBoxStyle,
-          height: 60.0,
-          child: TextFormField(
-            controller: confirmPwd ? _confirmPass : _pass,
-            obscureText: true,
-            keyboardType: TextInputType.text,
-            style: TextStyle(color: Colors.white),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                Icons.person,
-                color: Colors.grey,
-              ),
-              hintText: "Enter a password",
-              hintStyle: kHintText,
-            ),
-            validator: (String value) {
-              if (confirmPwd) {
-                if (_pass.text != _confirmPass.text) {
-                  return "Passwords must match";
-                }
-              } else {
-                if (value.length < 6) {
-                  return "Password must be longer than 6 characters";
-                }
+        TextFormField(
+          controller: confirmPwd ? _confirmPass : _pass,
+          obscureText: true,
+          keyboardType: TextInputType.text,
+          style: TextStyle(color: Colors.white),
+          decoration: kInputDecoration("Enter a password", Icons.lock),
+          validator: (String value) {
+            if (confirmPwd) {
+              if (_pass.text != _confirmPass.text) {
+                return "Passwords must match";
               }
-              return null;
-            },
-            onSaved: (val) {
-              if (confirmPwd) {
-                _passwordConfirm = val.trim();
-              } else {
-                _password = val.trim();
+            } else {
+              if (value.length < 6) {
+                return "Password must be longer than 6 characters";
               }
-            },
-          ),
+            }
+            return null;
+          },
+          onSaved: (val) {
+            if (confirmPwd) {
+              _passwordConfirm = val.trim();
+            } else {
+              _password = val.trim();
+            }
+          },
         ),
       ],
     );
