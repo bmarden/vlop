@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vlop/services/auth_service.dart';
+import 'package:vlop/screens/create_post/create_post.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -24,6 +25,15 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            RaisedButton(
+                child: Text("Create Post Page"), //temporary button
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => CreatePost(),
+                    ),
+                  );
+                }),
             RaisedButton(
               child: Text("Sign out"),
               // Using the AuthService to sign the current user out of Firebase
