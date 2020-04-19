@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:string_validator/string_validator.dart';
 import 'package:vlop/services/auth_service.dart';
 import 'package:vlop/utilities/constants.dart';
@@ -20,12 +21,26 @@ class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
 
   // Controllers
-  final TextEditingController _pass = TextEditingController();
+  TextEditingController _pass;
 
   // Local variables
   bool _loading = false;
   bool _validateState = false;
   String _email;
+
+  @override
+  void initState() {
+    _pass = TextEditingController();
+    _pass.addListener(() {
+      setState(() {});
+    });
+    super.initState();
+  }
+
+  void dispose() {
+    _pass.dispose();
+    super.dispose();
+  }
 
   // TODO: Add setState and Dispose
   bool validateForm() {
@@ -37,12 +52,14 @@ class _LoginState extends State<Login> {
     return false;
   }
 
-  void submitForm() async {
-    setState(() => _loading = true);
+  Future<void> submitForm() async {
+    // setState(() => _loading = true);
     if (validateForm()) {
-      dynamic result = _auth.signInUserWithEmail(_email, _pass.text);
+      dynamic result = await _auth.signInUserWithEmail(_email, _pass.text);
       if (result == null) {
-        print("ERROR: couldn't register user");
+        print("Error: Couldn't login poop");
+        setState(() => _loading = false);
+        _buildErrorDialog(context, "Couldn't login");
       } else {
         setState(() => _validateState = true);
       }
@@ -109,7 +126,9 @@ class _LoginState extends State<Login> {
       height: 96.0,
       child: RaisedButton(
         elevation: 3.0,
-        onPressed: submitForm,
+        onPressed: () async {
+          await submitForm();
+        },
         padding: EdgeInsets.all(10.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
@@ -136,6 +155,25 @@ class _LoginState extends State<Login> {
                 ..onTap = () => widget.toggleView()),
         ],
       ),
+    );
+  }
+
+  void _buildErrorDialog(BuildContext context, _message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Error Message'),
+          content: Text(_message),
+          actions: <Widget>[
+            FlatButton(
+                child: Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                })
+          ],
+        );
+      },
     );
   }
 

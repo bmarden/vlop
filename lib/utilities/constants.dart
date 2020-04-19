@@ -12,8 +12,8 @@ final kLabelStyle = TextStyle(
 );
 
 final kSmallText = TextStyle(
-  color: Colors.white38,
-  fontSize: 14,
+  color: Colors.white,
+  fontSize: 16,
   fontWeight: FontWeight.bold,
   fontFamily: 'OpenSans',
 );

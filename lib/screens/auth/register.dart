@@ -27,7 +27,11 @@ class _RegisterState extends State<Register> {
   bool _validateState = false;
   String error = '';
 
-  // TODO: Add setState and Dispose
+  void dispose() {
+    _pass.dispose();
+    _confirmPass.dispose();
+    super.dispose();
+  }
 
   bool validateForm() {
     final form = _formKey.currentState;
@@ -172,10 +176,13 @@ class _RegisterState extends State<Register> {
         style: TextStyle(fontSize: 16),
         children: [
           TextSpan(
-              text: 'Sign in Here!',
-              style: kSmallText,
-              recognizer: TapGestureRecognizer()
-                ..onTap = () => widget.toggleView()),
+            text: 'Sign in Here!',
+            style: kSmallText,
+            recognizer: TapGestureRecognizer()
+              ..onTap = () {
+                widget.toggleView();
+              },
+          ),
         ],
       ),
     );
