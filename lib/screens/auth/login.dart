@@ -1,6 +1,5 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:string_validator/string_validator.dart';
 import 'package:vlop/services/auth_service.dart';
 import 'package:vlop/utilities/constants.dart';
@@ -42,7 +41,6 @@ class _LoginState extends State<Login> {
     super.dispose();
   }
 
-  // TODO: Add setState and Dispose
   bool validateForm() {
     final form = _formKey.currentState;
     if (form.validate()) {
