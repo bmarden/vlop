@@ -22,18 +22,40 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text("Home Page"),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.grey[400],
+        child: const Icon(Icons.add),
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => CreatePost(),
+            ),
+          );
+        },
+      ),
       bottomNavigationBar: BottomAppBar(
+        color: Colors.blue[500],
+        elevation: 8.0,
+        shape: CircularNotchedRectangle(),
+        notchMargin: 6.0,
         child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            IconButton(
-              icon: FaIcon(FontAwesomeIcons.plus),
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => CreatePost(),
-                  ),
-                );
-              },
+            Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: IconButton(
+                icon: Icon(Icons.home),
+                onPressed: () {},
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: IconButton(
+                icon: Icon(Icons.account_circle),
+                onPressed: () {},
+              ),
             )
           ],
         ),

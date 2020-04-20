@@ -52,34 +52,44 @@ class _CreatePostState extends State<CreatePost> {
       ),
       bottomNavigationBar: BottomAppBar(
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(right: 5.0),
+            ),
             IconButton(
-              padding: EdgeInsets.only(right: 45.0),
-              icon: Icon(Icons.camera),
+              icon: Icon(Icons.camera_alt),
               onPressed: () => _openCamera(context),
             ),
             IconButton(
-              padding: EdgeInsets.only(left: 45.0),
               icon: Icon(Icons.photo_library),
               onPressed: () => _openGallery(context),
-            )
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 5.0),
+            ),
           ],
         ),
       ),
       body: ListView(
         children: <Widget>[
           if (_postPhoto?.imageFile != null) ...[
-            Image.file(_postPhoto?.imageFile),
-            FlatButton(
-              child: Icon(Icons.crop),
-              onPressed: _cropPhoto,
-            ),
-            FlatButton(
-              child: Icon(Icons.refresh),
-              onPressed: () {
-                setState(() => _postPhoto = null);
-              },
+            Image.file(_postPhoto.imageFile),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                FlatButton(
+                  child: Icon(Icons.crop),
+                  onPressed: _cropPhoto,
+                ),
+                FlatButton(
+                  child: Icon(Icons.refresh),
+                  onPressed: () {
+                    setState(() => _postPhoto = null);
+                  },
+                ),
+              ],
             ),
           ],
         ],
