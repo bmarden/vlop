@@ -19,3 +19,6 @@ Register Page
 Theme Stuff
 <https://codeburst.io/make-a-material-design-login-page-with-flutter-theming-4fce335cbce3>
 <https://codelabs.developers.google.com/codelabs/mdc-104-flutter/#0>
+
+Home Page
+<https://fireship.io/lessons/flutter-file-uploads-cloud-storage/>
