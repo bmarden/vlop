@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vlop/services/auth_service.dart';
 import 'package:vlop/screens/create_post/create_post.dart';
+import 'package:vlop/screens/profile/profile.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomePage extends StatefulWidget {
@@ -54,7 +55,13 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsets.all(5.0),
               child: IconButton(
                 icon: Icon(Icons.account_circle),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => profilePage(),
+                    ),
+                  );
+                },
               ),
             )
           ],
