@@ -1,15 +1,19 @@
 class User {
   // Store the uid from Firebase
   final String uid;
-  final String userName;
-  final String email;
-  User({this.uid, this.userName, this.email});
+  User({this.uid});
 }
 
-// class UserData {
-// final String userName;
-// final String email;
-// final String uid;
+class UserData {
+  final String userName;
+  final String email;
 
-// UserData({this.userName, this.email, this.uid});
-// }
+  UserData({this.userName, this.email});
+
+  factory UserData.fromMap(Map data) {
+    return UserData(
+      email: data['email'],
+      userName: data['userName'],
+    );
+  }
+}

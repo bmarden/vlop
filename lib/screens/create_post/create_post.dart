@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:provider/provider.dart';
 import 'package:vlop/models/photo.dart';
+import 'package:vlop/models/user.dart';
 
 class CreatePost extends StatefulWidget {
   // @override
@@ -46,6 +48,8 @@ class _CreatePostState extends State<CreatePost> {
 
   @override
   Widget build(BuildContext context) {
+    final userdata = Provider.of<UserData>(context);
+    print(userdata.email);
     return Scaffold(
       appBar: AppBar(
         title: Text("Create Post"),
