@@ -2,6 +2,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:vlop/models/photo.dart';
 import 'package:vlop/models/user.dart';
+import 'package:vlop/utilities/widgets.dart';
 
 class Upload extends StatefulWidget {
   final Photo photo;
@@ -55,10 +56,22 @@ class _UploadState extends State<Upload> {
             );
           });
     } else {
-      return FlatButton.icon(
-        label: Text('Upload'),
-        icon: Icon(Icons.cloud_upload),
-        onPressed: _startUpload,
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Button(
+            asyncAction: false,
+            buttonAction: _startUpload,
+            buttonText: "Upload",
+          )
+          // RaisedButton.icon(
+          //   shape: RoundedRectangleBorder(
+          //       borderRadius: BorderRadius.circular(8.0)),
+          //   label: Text('Upload'),
+          //   icon: Icon(Icons.cloud_upload),
+          //   onPressed: _startUpload,
+          // ),
+        ],
       );
     }
   }
