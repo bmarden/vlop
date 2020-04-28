@@ -12,8 +12,8 @@ class UserData {
 
   factory UserData.fromMap(Map data) {
     return UserData(
-      email: data['email'],
-      userName: data['userName'],
+      email: data['email'] ?? '',
+      userName: data['userName'] ?? '',
     );
   }
 }
