@@ -6,6 +6,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:provider/provider.dart';
 import 'package:vlop/models/photo.dart';
 import 'package:vlop/models/user.dart';
+import 'package:vlop/screens/create_post/upload_post.dart';
 
 class CreatePost extends StatefulWidget {
   // @override
@@ -49,6 +50,7 @@ class _CreatePostState extends State<CreatePost> {
   @override
   Widget build(BuildContext context) {
     final userdata = Provider.of<UserData>(context);
+    final user = Provider.of<User>(context);
     print(userdata.email);
     return Scaffold(
       appBar: AppBar(
@@ -95,6 +97,7 @@ class _CreatePostState extends State<CreatePost> {
                 ),
               ],
             ),
+            Upload(photo: _postPhoto, user: user),
           ],
         ],
       ),
