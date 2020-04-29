@@ -49,9 +49,7 @@ class _CreatePostState extends State<CreatePost> {
 
   @override
   Widget build(BuildContext context) {
-    final userdata = Provider.of<UserData>(context);
     final user = Provider.of<User>(context);
-    print(userdata.email);
     return Scaffold(
       appBar: AppBar(
         title: Text("Create Post"),
@@ -81,7 +79,13 @@ class _CreatePostState extends State<CreatePost> {
       body: ListView(
         children: <Widget>[
           if (_postPhoto?.imageFile != null) ...[
-            Image.file(_postPhoto.imageFile),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 10.0),
+              child: Image.file(
+                _postPhoto.imageFile,
+                height: 400.0,
+              ),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[

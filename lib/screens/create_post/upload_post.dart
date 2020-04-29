@@ -2,6 +2,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:vlop/models/photo.dart';
 import 'package:vlop/models/user.dart';
+import 'package:vlop/utilities/constants.dart';
 import 'package:vlop/utilities/widgets.dart';
 
 class Upload extends StatefulWidget {
@@ -35,23 +36,27 @@ class _UploadState extends State<Upload> {
           stream: _uploadTask.events,
           builder: (context, snapshot) {
             var event = snapshot?.data?.snapshot;
-
             double progressPercent = event != null
                 ? event.bytesTransferred / event.totalByteCount
                 : 0;
-
             return Column(
               children: <Widget>[
-                if (_uploadTask.isComplete) Text("Upload Complete!"),
+                // Progress bar
+                LinearProgressIndicator(value: progressPercent),
+                Text('${(progressPercent * 100).toStringAsFixed(2)} % '),
+                if (_uploadTask.isComplete)
+                  Text("Upload Complete!"),
+
                 if (_uploadTask.isInProgress)
                   FlatButton(
                     child: Icon(Icons.pause),
                     onPressed: _uploadTask.pause,
                   ),
-
-                // Progress bar
-                LinearProgressIndicator(value: progressPercent),
-                Text('${(progressPercent * 100).toStringAsFixed(2)} % '),
+                if (_uploadTask.isPaused)
+                  FlatButton(
+                    child: Icon(Icons.play_arrow),
+                    onPressed: _uploadTask.resume,
+                  ),
               ],
             );
           });
@@ -60,17 +65,12 @@ class _UploadState extends State<Upload> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Button(
-            asyncAction: false,
-            buttonAction: _startUpload,
-            buttonText: "Upload",
-          )
-          // RaisedButton.icon(
-          //   shape: RoundedRectangleBorder(
-          //       borderRadius: BorderRadius.circular(8.0)),
-          //   label: Text('Upload'),
-          //   icon: Icon(Icons.cloud_upload),
-          //   onPressed: _startUpload,
-          // ),
+            child: Text(
+              'Upload',
+            ),
+            color: Colors.blue[700],
+            onPressed: _startUpload,
+          ),
         ],
       );
     }

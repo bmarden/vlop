@@ -2,36 +2,39 @@ import 'package:flutter/material.dart';
 import 'constants.dart';
 
 class Button extends StatelessWidget {
-  final buttonText;
-  final Function buttonAction;
-  final bool asyncAction;
+  final Widget child;
+  final Color color;
+  final double width;
+  final double height;
+  final Function onPressed;
+
   Button({
-    @required this.buttonText,
-    @required this.buttonAction,
-    @required this.asyncAction,
-  });
+    Key key,
+    @required this.child,
+    this.color = Colors.blue,
+    this.width = 85.0,
+    this.height = 35.0,
+    this.onPressed,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 25.0),
-      width: 140.0,
-      height: 96.0,
-      child: RaisedButton(
-        elevation: 3.0,
-        onPressed: asyncAction
-            ? () async {
-                await buttonAction();
-              }
-            : buttonAction(),
-        padding: EdgeInsets.all(10.0),
-        shape: RoundedRectangleBorder(
+      width: width,
+      height: height,
+      padding: EdgeInsets.all(10.0),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(30.0),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
           borderRadius: BorderRadius.circular(30.0),
-        ),
-        color: Colors.grey[800],
-        child: Text(
-          buttonText,
-          style: kLabelStyle,
+          onTap: onPressed,
+          child: Center(
+            child: child,
+          ),
         ),
       ),
     );
