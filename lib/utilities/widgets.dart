@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'constants.dart';
 
 class Button extends StatelessWidget {
   final Widget child;
@@ -12,8 +11,8 @@ class Button extends StatelessWidget {
     Key key,
     @required this.child,
     this.color = Colors.blue,
-    this.width = 85.0,
-    this.height = 35.0,
+    this.width = 100.0,
+    this.height = 40.0,
     this.onPressed,
   }) : super(key: key);
 

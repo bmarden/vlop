@@ -2,8 +2,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:vlop/models/photo.dart';
 import 'package:vlop/models/user.dart';
-import 'package:vlop/utilities/constants.dart';
 import 'package:vlop/utilities/widgets.dart';
+import 'package:vlop/services/database.dart';
 
 class Upload extends StatefulWidget {
   final Photo photo;
@@ -15,25 +15,19 @@ class Upload extends StatefulWidget {
 }
 
 class _UploadState extends State<Upload> {
-  final FirebaseStorage _storage =
-      FirebaseStorage(storageBucket: 'gs://vlop-d2566.appspot.com');
-
-  StorageUploadTask _uploadTask;
+  StorageUploadTask _uploadImage;
 
   void _startUpload() {
-    String path = 'images/${widget.user.uid}/${widget.photo.id}.png';
-    // String path = 'images/${DateTime.now()}.png';
-
     setState(() {
-      _uploadTask = _storage.ref().child(path).putFile(widget.photo.imageFile);
+      _uploadImage = DbService().uploadTask(widget.photo, widget.user.uid);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_uploadTask != null) {
+    if (_uploadImage != null) {
       return StreamBuilder<StorageTaskEvent>(
-          stream: _uploadTask.events,
+          stream: _uploadImage.events,
           builder: (context, snapshot) {
             var event = snapshot?.data?.snapshot;
             double progressPercent = event != null
@@ -44,18 +38,31 @@ class _UploadState extends State<Upload> {
                 // Progress bar
                 LinearProgressIndicator(value: progressPercent),
                 Text('${(progressPercent * 100).toStringAsFixed(2)} % '),
-                if (_uploadTask.isComplete)
+                if (_uploadImage.isComplete)
                   Text("Upload Complete!"),
-
-                if (_uploadTask.isInProgress)
-                  FlatButton(
-                    child: Icon(Icons.pause),
-                    onPressed: _uploadTask.pause,
+                if (_uploadImage.isInProgress) ...[
+                  Row(
+                    children: <Widget>[
+                      FlatButton(
+                        child: Icon(Icons.cancel),
+                        onPressed: _uploadImage.cancel,
+                      ),
+                      FlatButton(
+                        child: Icon(Icons.pause),
+                        onPressed: _uploadImage.pause,
+                      ),
+                    ],
                   ),
-                if (_uploadTask.isPaused)
+                ] else ...[
+                  Icon(
+                    Icons.check_circle,
+                    color: Colors.green[600],
+                  ),
+                ],
+                if (_uploadImage.isPaused)
                   FlatButton(
                     child: Icon(Icons.play_arrow),
-                    onPressed: _uploadTask.resume,
+                    onPressed: _uploadImage.resume,
                   ),
               ],
             );
