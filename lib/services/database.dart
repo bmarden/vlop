@@ -22,7 +22,7 @@ class DbService {
 
   // Instantiate a reference to Firebase image collection
   final CollectionReference _imgCollection =
-      Firestore.instance.collection('imagesInfo');
+      Firestore.instance.collection('imageData');
 
   Future updateUser(String email, String userName) async {
     return await _userCollection.document(uid).setData({
@@ -31,10 +31,17 @@ class DbService {
     });
   }
 
-  Future<void> addUserPost(String userId, String picId) {
+  Future<void> addPostToUserData(String userId, String picId) {
     return _userCollection.document(userId).setData({
       'postIds': FieldValue.arrayUnion([picId])
     }, merge: true);
+  }
+
+  Future<void> addImageDataToCollections(Photo img) {
+    return _imgCollection.document(img.id).setData({
+      'userOwner': img.userOwner,
+      'tags': FieldValue.arrayUnion(img.tags),
+    });
   }
 
   /// Returns a stream of UserData if a user is logged in
@@ -63,10 +70,11 @@ class DbService {
         .then((snap) => UserData.fromMap(snap.data));
   }
 
-  StorageUploadTask uploadTask(Photo pic, String userId) {
+  StorageUploadTask uploadTask(Photo img, String userId) {
     // Save the postId to the user's Posts array in their document
-    addUserPost(userId, pic.id);
-    String path = 'images/${userId}/${pic.id}.png';
-    return _storage.ref().child(path).putFile(pic.imageFile);
+    addPostToUserData(userId, img.id);
+    addImageDataToCollections(img);
+    String path = 'images/${userId}/${img.id}.png';
+    return _storage.ref().child(path).putFile(img.imageFile);
   }
 }
