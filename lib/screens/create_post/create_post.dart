@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 import 'package:vlop/models/photo.dart';
 import 'package:vlop/models/user.dart';
 import 'package:vlop/screens/create_post/upload_post.dart';
@@ -33,6 +34,7 @@ class _CreatePostState extends State<CreatePost> {
     ];
     setState(() {
       _postPhoto = Photo(
+        id: Uuid().v1(),
         imageFile: picture,
         userOwner: user.userName,
         tags: tags,
@@ -53,6 +55,7 @@ class _CreatePostState extends State<CreatePost> {
     ];
     setState(() {
       _postPhoto = Photo(
+        id: Uuid().v1(),
         imageFile: picture,
         userOwner: user.userName,
         tags: tags,
