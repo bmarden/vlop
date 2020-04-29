@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -59,6 +61,15 @@ class DbService {
         return Stream<UserData>.value(null);
       }
     });
+  }
+
+  Stream<FeedPhoto> get photoStream {
+    int MAX_SIZE = 7 * 1024*1024;
+  }
+
+  Future<void> downloadPhoto() {
+    var photos = _imgCollection.getDocuments();
+    String ref = photos.
   }
 
   // Get a single document by user id

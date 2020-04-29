@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Photo {
@@ -13,6 +14,14 @@ class Photo {
     return Photo(
       id: doc.documentID,
       userOwner: data['userOwner'] ?? '',
+      tags: data['tags'] as List ?? [],
+      imageFile: data['file'],
     );
   }
+}
+
+class FeedPhoto {
+  Uint8List image;
+
+  FeedPhoto({this.image});
 }
