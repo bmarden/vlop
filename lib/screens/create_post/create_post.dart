@@ -16,7 +16,9 @@ class CreatePost extends StatefulWidget {
 class _CreatePostState extends State<CreatePost> {
   Photo _postPhoto;
 
+  /// Get image from the gallery
   Future<void> _openGallery(BuildContext context) async {
+    final user = Provider.of<UserData>(context, listen: false);
     var picture = await ImagePicker.pickImage(
       source: ImageSource.gallery,
     );
@@ -25,16 +27,18 @@ class _CreatePostState extends State<CreatePost> {
       return;
     }
     setState(() {
-      _postPhoto = Photo(picture);
+      _postPhoto = Photo(imageFile: picture, userOwner: user.userName);
     });
   }
 
+  /// Take new picture from camera
   Future<void> _openCamera(BuildContext context) async {
+    final user = Provider.of<UserData>(context, listen: false);
     var picture = await ImagePicker.pickImage(
       source: ImageSource.camera,
     );
     setState(() {
-      _postPhoto = Photo(picture);
+      _postPhoto = Photo(imageFile: picture, userOwner: user.userName);
     });
   }
 
