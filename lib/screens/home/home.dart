@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vlop/services/auth_service.dart';
 import 'package:vlop/screens/create_post/create_post.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:vlop/utilities/constants.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -60,18 +60,36 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              child: Text(
+                'Vlop',
+                style: Theme.of(context).textTheme.display1,
+                textAlign: TextAlign.center,
+              ),
+              decoration: kBoxGradient,
+            ),
+            ListTile(
+              leading: Icon(Icons.exit_to_app),
+              onTap: () async {
+                Navigator.pop(context);
+                await _auth.logout();
+              },
+              title: Text(
+                "Sign out",
+                style: kLabelStyle,
+              ),
+            ),
+          ],
+        ),
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            RaisedButton(
-              child: Text("Sign out"),
-              // Using the AuthService to sign the current user out of Firebase
-              onPressed: () async {
-                await _auth.logout();
-              },
-            )
-          ],
+          children: <Widget>[],
         ),
       ),
     );

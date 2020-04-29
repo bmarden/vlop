@@ -7,8 +7,8 @@ final kHintText = TextStyle(
 
 final kLabelStyle = TextStyle(
   color: Colors.white,
-  fontWeight: FontWeight.bold,
-  fontFamily: 'OpenSans',
+  fontWeight: FontWeight.w600,
+  fontFamily: 'Manrope',
 );
 
 final kSmallText = TextStyle(
@@ -28,6 +28,17 @@ final kBoxStyle = BoxDecoration(
       offset: Offset(0, 2),
     ),
   ],
+);
+
+final kBoxGradient = BoxDecoration(
+  gradient: LinearGradient(
+    colors: <Color>[
+      Color(0xFF73AEF5),
+      Color(0xFF61A4F1),
+      Color(0xFF478DE0),
+      Color(0xFF398AE5),
+    ],
+  ),
 );
 
 // Custom InputDecoration for register/login forms
