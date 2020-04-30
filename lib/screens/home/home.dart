@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:vlop/services/auth_service.dart';
 import 'package:vlop/screens/create_post/create_post.dart';
-<<<<<<< b67df6e3df23d89a778e6356a8212a7e80f76834
 import 'package:vlop/utilities/constants.dart';
-=======
 import 'package:vlop/screens/profile/profile.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
->>>>>>> profile page added
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
