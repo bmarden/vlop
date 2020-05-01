@@ -34,21 +34,22 @@ class DbService {
     });
   }
 
+  /// Add imageData Id's to a user's postIds array
   Future<void> _addPostToUserData(String userId, String picId) {
     return _userCollection.document(userId).setData({
       'postIds': FieldValue.arrayUnion([picId])
-    }, merge: true);
+    }, merge: true).catchError((e) => print(e.message));
   }
 
+  /// Add data about image to imageData collection
   Future<void> addImageDataToCollections(Photo img, String path) async {
-    print(path);
     var downloadUrl = await _storage.ref().child(path).getDownloadURL();
     return _imgCollection.document(img.id).setData({
       'userOwner': img.userOwner,
       'tags': FieldValue.arrayUnion(img.tags),
       'url': downloadUrl,
       'path': path,
-    });
+    }).catchError((e) => print(e.message));
   }
 
   /// Returns a stream of UserData if a user is logged in
