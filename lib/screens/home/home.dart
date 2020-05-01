@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
+=======
+import 'package:provider/provider.dart';
+import 'package:vlop/models/photo.dart';
+>>>>>>> Set up stream of imageData
 import 'package:vlop/screens/home/post_feed.dart';
 import 'package:vlop/services/auth_service.dart';
 import 'package:vlop/screens/create_post/create_post.dart';
@@ -16,10 +21,13 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   // An instance of AuthService that gives access to FirebaseAuth services to logout user
   final AuthService _auth = AuthService();
+  final DbService _db = DbService();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return StreamProvider<List<Photo>>.value(
+      value: _db.photoStream,
+      child: Scaffold(
         appBar: AppBar(
           title: Text('Home Page'),
         ),
@@ -86,6 +94,8 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
-        body: Feed());
+        body: Feed(),
+      ),
+    );
   }
 }

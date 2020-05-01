@@ -69,6 +69,13 @@ class DbService {
     });
   }
 
+  Stream<List<Photo>> get photoStream {
+    return _imgCollection.snapshots().map(
+          (snaps) =>
+              snaps.documents.map((doc) => Photo.fromFirestore(doc)).toList(),
+        );
+  }
+
   /// Download single image
   downloadPhoto(String path) {
     int MAX_SIZE = 5 * 1024 * 1024;
