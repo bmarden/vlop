@@ -44,11 +44,15 @@ class _UploadState extends State<Upload> {
               children: <Widget>[
                 // Progress bar
                 LinearProgressIndicator(value: progressPercent),
-                Text('${(progressPercent * 100).toStringAsFixed(2)} % '),
+                Text(
+                  '${(progressPercent * 100).toStringAsFixed(0)}% ',
+                  style: Theme.of(context).textTheme.display2,
+                ),
                 if (_uploadImage.isComplete)
                   Text('Upload Complete!'),
                 if (_uploadImage.isInProgress) ...[
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       FlatButton(
                         child: Icon(Icons.cancel),
