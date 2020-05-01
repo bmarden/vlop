@@ -17,10 +17,17 @@ class Upload extends StatefulWidget {
 class _UploadState extends State<Upload> {
   StorageUploadTask _uploadImage;
 
-  void _startUpload() {
+  void _startUpload() async {
     setState(() {
       _uploadImage = DbService().uploadTask(widget.photo, widget.user.uid);
     });
+    await _uploadImage.onComplete;
+    await _addImageData();
+  }
+
+  Future<void> _addImageData() async {
+    await DbService().addImageDataToCollections(
+        widget.photo, 'images/${widget.photo.id}.png');
   }
 
   @override

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -33,16 +34,20 @@ class DbService {
     });
   }
 
-  Future<void> addPostToUserData(String userId, String picId) {
+  Future<void> _addPostToUserData(String userId, String picId) {
     return _userCollection.document(userId).setData({
       'postIds': FieldValue.arrayUnion([picId])
     }, merge: true);
   }
 
-  Future<void> addImageDataToCollections(Photo img) {
+  Future<void> addImageDataToCollections(Photo img, String path) async {
+    print(path);
+    var downloadUrl = await _storage.ref().child(path).getDownloadURL();
     return _imgCollection.document(img.id).setData({
       'userOwner': img.userOwner,
       'tags': FieldValue.arrayUnion(img.tags),
+      'url': downloadUrl,
+      'path': path,
     });
   }
 
@@ -63,13 +68,10 @@ class DbService {
     });
   }
 
-  Stream<FeedPhoto> get photoStream {
-    int MAX_SIZE = 7 * 1024*1024;
-  }
-
-  Future<void> downloadPhoto() {
-    var photos = _imgCollection.getDocuments();
-    String ref = photos.
+  /// Download single image
+  downloadPhoto(String path) {
+    int MAX_SIZE = 5 * 1024 * 1024;
+    return _storage.ref().child(path).getData(MAX_SIZE);
   }
 
   // Get a single document by user id
@@ -80,11 +82,11 @@ class DbService {
         .then((snap) => UserData.fromMap(snap.data));
   }
 
+  /// Upload Image to Firebase storage and store Image Data in Firestore
   StorageUploadTask uploadTask(Photo img, String userId) {
+    String path = 'images/${img.id}.png';
+    _addPostToUserData(userId, img.id);
     // Save the postId to the user's Posts array in their document
-    addPostToUserData(userId, img.id);
-    addImageDataToCollections(img);
-    var path = 'images/${userId}/${img.id}.png';
     return _storage.ref().child(path).putFile(img.imageFile);
   }
 }
