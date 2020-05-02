@@ -1,3 +1,6 @@
+language: dart
+dart:
+  - stable
 os:
   - linux
 sudo: false
@@ -13,13 +16,17 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - lib32stdc++6
-install:
-  - if [ ! -f $HOME/flutter/bin/flutter ] ; then git clone https://github.com/flutter/flutter.git -b beta ; fi
-  - ./flutter/bin/flutter doctor
-  - ./flutter/bin/flutter packages get
+install: echo 'Running tests...'
+  - pwd
+before_script:
+  - cd ..
+  - if [ ! -f $HOME/flutter/bin/flutter ] ; then git clone https://github.com/flutter/flutter.git -b stable ; fi
+  - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
+  - flutter doctor
   - gem install coveralls-lcov
 script:
-  - ./flutter/bin/flutter $COMMAND
+  - cd $TRAVIS_BUILD_DIR
+  - flutter $COMMAND
 after_success:
   - coveralls-lcov coverage/lcov.info
 cache:
