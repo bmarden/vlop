@@ -56,7 +56,6 @@ class _LoginState extends State<Login> {
     if (validateForm()) {
       dynamic result = await _auth.signInUserWithEmail(_email, _pass.text);
       if (result == null) {
-        print("Error: Couldn't login poop");
         setState(() => _loading = false);
         _buildErrorDialog(context, "Couldn't login");
       } else {
