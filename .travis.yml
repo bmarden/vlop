@@ -11,8 +11,9 @@ addons:
     packages:
       - lib32stdc++6
 install:
-  - git clone https://github.com/flutter/flutter.git -b stable
+  - if [ ! -f $HOME/flutter/bin/flutter ] ; then git clone https://github.com/flutter/flutter.git -b beta ; fi
   - ./flutter/bin/flutter doctor
+  - ./flutter/bin/flutter packages get
   - gem install coveralls-lcov
 script:
   - ./flutter/bin/flutter $COMMAND
@@ -20,4 +21,5 @@ after_success:
   - coveralls-lcov coverage/lcov.info
 cache:
   directories:
+    - flutter
     - $HOME/.pub-cache
