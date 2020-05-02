@@ -26,10 +26,10 @@ class _CreatePostState extends State<CreatePost> {
       print('no image found');
       return;
     }
-    List<String> tags = [
-      "fire",
-      "best",
-      "amazing",
+    var tags = [
+      'fire',
+      'best',
+      'amazing',
     ];
     setState(() {
       _postPhoto = Photo(
@@ -46,10 +46,10 @@ class _CreatePostState extends State<CreatePost> {
     var picture = await ImagePicker.pickImage(
       source: ImageSource.camera,
     );
-    List<String> tags = [
-      "fire",
-      "best",
-      "amazing",
+    var tags = [
+      'fire',
+      'best',
+      'amazing',
     ];
     setState(() {
       _postPhoto = Photo(

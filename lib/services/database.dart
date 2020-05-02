@@ -49,8 +49,7 @@ class DbService {
     return _auth.onAuthStateChanged.switchMap((user) {
       if (user != null) {
         // Get the reference to the currently logged in user
-        final DocumentReference _userDoc =
-            Firestore.instance.document('users/${user.uid}');
+        final _userDoc = Firestore.instance.document('users/${user.uid}');
 
         // Return a stream of data that can be used for user information in the app
         return _userDoc
@@ -74,7 +73,7 @@ class DbService {
     // Save the postId to the user's Posts array in their document
     addPostToUserData(userId, img.id);
     addImageDataToCollections(img);
-    String path = 'images/${userId}/${img.id}.png';
+    var path = 'images/${userId}/${img.id}.png';
     return _storage.ref().child(path).putFile(img.imageFile);
   }
 }

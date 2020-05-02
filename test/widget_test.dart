@@ -12,10 +12,15 @@ void main() {
   // Build our app and trigger a frame.
   group('User test', () {
     test('Test User declaration', () {
-      var newUser =
-          User(uid: '1234', userName: 'testUser', email: 'testUser@email.com');
+      var posts = [
+        'these',
+        'are',
+        'postIds',
+      ];
+      var newUser = UserData(
+          userName: 'testUser', email: 'testUser@email.com', postIds: posts);
 
-      expect(newUser.uid, '1234');
+      expect(newUser.postIds, ['these', 'are', 'postIds']);
       expect(newUser.userName, 'testUser');
       expect(newUser.email, 'testUser@email.com');
     });
