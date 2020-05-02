@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -77,8 +76,8 @@ class DbService {
   }
 
   /// Download single image
-  downloadPhoto(String path) {
-    int MAX_SIZE = 5 * 1024 * 1024;
+  Future<Uint8List> downloadPhoto(String path) async {
+    var MAX_SIZE = 5 * 1024 * 1024;
     return _storage.ref().child(path).getData(MAX_SIZE);
   }
 
@@ -92,7 +91,7 @@ class DbService {
 
   /// Upload Image to Firebase storage and store Image Data in Firestore
   StorageUploadTask uploadTask(Photo img, String userId) {
-    String path = 'images/${img.id}.png';
+    var path = 'images/${img.id}.png';
     _addPostToUserData(userId, img.id);
     // Save the postId to the user's Posts array in their document
     return _storage.ref().child(path).putFile(img.imageFile);

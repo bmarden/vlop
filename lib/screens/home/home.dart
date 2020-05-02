@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
-=======
 import 'package:provider/provider.dart';
 import 'package:vlop/models/photo.dart';
->>>>>>> Set up stream of imageData
 import 'package:vlop/screens/home/post_feed.dart';
 import 'package:vlop/services/auth_service.dart';
 import 'package:vlop/screens/create_post/create_post.dart';
+import 'package:vlop/services/database.dart';
 import 'package:vlop/utilities/constants.dart';
 
 class HomePage extends StatefulWidget {
@@ -80,16 +78,17 @@ class _HomePageState extends State<HomePage> {
                   textAlign: TextAlign.center,
                 ),
                 decoration: kBoxGradient,
-            ),
-            ListTile(
-              leading: Icon(Icons.exit_to_app),
-              onTap: () async {
-                Navigator.pop(context);
-                await _auth.logout();
-              },
-              title: Text(
-                'Sign out',
-                style: kLabelStyle,
+              ),
+              ListTile(
+                leading: Icon(Icons.exit_to_app),
+                onTap: () async {
+                  Navigator.pop(context);
+                  await _auth.logout();
+                },
+                title: Text(
+                  'Sign out',
+                  style: kLabelStyle,
+                ),
               ),
             ],
           ),

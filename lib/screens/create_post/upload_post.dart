@@ -39,7 +39,7 @@ class _UploadState extends State<Upload> {
             var event = snapshot?.data?.snapshot;
             var progressPercent = event != null
                 ? event.bytesTransferred / event.totalByteCount
-                : 0;
+                : 0.0;
             return Column(
               children: <Widget>[
                 // Progress bar
