@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -7,6 +5,7 @@ import 'package:vlop/models/photo.dart';
 
 class CreatePost extends StatefulWidget {
   // @override
+  @override
   _CreatePostState createState() => _CreatePostState();
 }
 
@@ -36,7 +35,7 @@ class _CreatePostState extends State<CreatePost> {
   }
 
   Future<void> _cropPhoto() async {
-    File cropped = await ImageCropper.cropImage(
+    var cropped = await ImageCropper.cropImage(
       sourcePath: _postPhoto.imageFile.path,
     );
     setState(() {
@@ -48,7 +47,7 @@ class _CreatePostState extends State<CreatePost> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Create Post"),
+        title: Text('Create Post'),
       ),
       bottomNavigationBar: BottomAppBar(
         child: Row(

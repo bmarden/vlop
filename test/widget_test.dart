@@ -12,7 +12,7 @@ void main() {
   // Build our app and trigger a frame.
   group('User test', () {
     test('Test User declaration', () {
-      User newUser =
+      var newUser =
           User(uid: '1234', userName: 'testUser', email: 'testUser@email.com');
 
       expect(newUser.uid, '1234');

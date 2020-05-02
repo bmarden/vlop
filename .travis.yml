@@ -1,5 +1,6 @@
-language: dart
-dist: bionic
+os:
+  - linux
+sudo: false
 matrix:
   include:
     - name: Test
@@ -8,6 +9,8 @@ matrix:
       env: COMMAND=analyze
 addons:
   apt:
+    sources:
+      - ubuntu-toolchain-r-test
     packages:
       - lib32stdc++6
 install:

@@ -3,7 +3,7 @@ import 'package:vlop/models/user.dart';
 import 'package:vlop/services/database.dart';
 
 class AuthService {
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   // Create a new user object based on the firebase user
   User _userFromFirebase(FirebaseUser user) {
@@ -14,8 +14,8 @@ class AuthService {
   // Temporary
   Future anonymousSignIn() async {
     try {
-      AuthResult result = await _auth.signInAnonymously();
-      FirebaseUser user = result.user;
+      var result = await _auth.signInAnonymously();
+      var user = result.user;
       return _userFromFirebase(user);
     } catch (e) {
       print(e.toString());
@@ -33,9 +33,9 @@ class AuthService {
   Future registerNewUser(String email, String userName, String password) async {
     // Attempt to register new Firebase user
     try {
-      AuthResult result = await _auth.createUserWithEmailAndPassword(
+      var result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
-      FirebaseUser newUser = result.user;
+      var newUser = result.user;
 
       // If Firebase registration successful, register user in 'users' collection
       await DbService(uid: newUser.uid).updateUser(email, userName);
@@ -48,9 +48,9 @@ class AuthService {
 
   Future signInUserWithEmail(String email, String password) async {
     try {
-      AuthResult result = await _auth.signInWithEmailAndPassword(
+      var result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
-      FirebaseUser user = result.user;
+      var user = result.user;
       return _userFromFirebase(user);
     } catch (e) {
       print(e.toString());
