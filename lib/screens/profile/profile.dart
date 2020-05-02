@@ -4,6 +4,7 @@ import 'package:vlop/services/auth_service.dart';
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vlop/models/user.dart';
+import 'package:vlop/services/database.dart';
 
 class profilePage extends StatefulWidget {
   @override
@@ -11,12 +12,16 @@ class profilePage extends StatefulWidget {
 }
 
 class _profilePageState extends State<profilePage> {
-  final AuthService _auth = AuthService();
+  //final AuthService _auth = AuthService();
+
+  //final DbService db = DbService();
   Photo _profilePhoto;
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User>(context);
+    //final user = Provider.of<User>(context);
+    final DbService db = DbService();
+    final user = db.getUserDoc();
     return Scaffold(
       appBar: AppBar(
         title: Text("My Profile"),
@@ -48,7 +53,7 @@ class _profilePageState extends State<profilePage> {
           children: <Widget>[
             CircleAvatar(
               radius: 100,
-              child: Text(user.uid),
+              //child: Text(),
             ),
             RaisedButton(
               child: Text("edit profile"),
@@ -70,13 +75,6 @@ class _profilePageState extends State<profilePage> {
                 }),
               ),
             ),
-            RaisedButton(
-              child: Text("Sign out"),
-              // Using the AuthService to sign the current user out of Firebase
-              onPressed: () async {
-                await _auth.logout();
-              },
-            )
           ],
         ),
       ),
