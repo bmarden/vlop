@@ -2,12 +2,13 @@ language: dart
 dart:
   - stable
 dist: bionic
+env:
+  - COMMAND="test --coverage"
+  - COMMAND=analyze
 jobs:
-  include:
-    - name: Test
-      env: COMMAND=test --coverage
-    - name: Analyze
-      env: COMMAND=analyze
+  exclude:
+    - if: branch = master
+      env: COMMAND="test --coverage"
 addons:
   apt:
     sources:
