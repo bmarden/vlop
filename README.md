@@ -4,7 +4,7 @@
 
 [![Build Status](https://travis-ci.org/bmarden/vlop.svg?branch=master)](https://travis-ci.org/bmarden/vlop)
 
-[![Coverage Status](https://coveralls.io/repos/github/bmarden/vlop/badge.svg?branch=CI/CDSetup)](https://coveralls.io/github/bmarden/vlop?branch=CI/CDSetup)
+[![Coverage Status](https://coveralls.io/repos/github/bmarden/vlop/badge.svg?branch=master)](https://coveralls.io/github/bmarden/vlop?branch=master)
 
 ## Description
 
