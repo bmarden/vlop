@@ -16,7 +16,8 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - lib32stdc++6
-install: echo 'Running tests...'
+install:
+  - echo 'Running tests...'
   - pwd
 before_script:
   - cd ..
