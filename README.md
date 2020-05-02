@@ -1,5 +1,11 @@
 # vlop
 
+## Build Status
+
+[![Build Status](https://travis-ci.org/bmarden/vlop.svg?branch=master)](https://travis-ci.org/bmarden/vlop)
+
+[![Coverage Status](https://coveralls.io/repos/github/bmarden/vlop/badge.svg?branch=CI/CDSetup)](https://coveralls.io/github/bmarden/vlop?branch=CI/CDSetup)
+
 ## Description
 
 A video and picture sharing app. Built for iOS and Android using Flutter

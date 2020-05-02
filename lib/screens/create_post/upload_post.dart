@@ -30,7 +30,7 @@ class _UploadState extends State<Upload> {
           stream: _uploadImage.events,
           builder: (context, snapshot) {
             var event = snapshot?.data?.snapshot;
-            double progressPercent = event != null
+            var progressPercent = event != null
                 ? event.bytesTransferred / event.totalByteCount
                 : 0;
             return Column(
@@ -39,7 +39,7 @@ class _UploadState extends State<Upload> {
                 LinearProgressIndicator(value: progressPercent),
                 Text('${(progressPercent * 100).toStringAsFixed(2)} % '),
                 if (_uploadImage.isComplete)
-                  Text("Upload Complete!"),
+                  Text('Upload Complete!'),
                 if (_uploadImage.isInProgress) ...[
                   Row(
                     children: <Widget>[

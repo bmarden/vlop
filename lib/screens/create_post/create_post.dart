@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -11,6 +9,7 @@ import 'package:vlop/services/database.dart';
 
 class CreatePost extends StatefulWidget {
   // @override
+  @override
   _CreatePostState createState() => _CreatePostState();
 }
 
@@ -27,10 +26,10 @@ class _CreatePostState extends State<CreatePost> {
       print('no image found');
       return;
     }
-    List<String> tags = [
-      "fire",
-      "best",
-      "amazing",
+    var tags = [
+      'fire',
+      'best',
+      'amazing',
     ];
     setState(() {
       _postPhoto = Photo(
@@ -47,10 +46,10 @@ class _CreatePostState extends State<CreatePost> {
     var picture = await ImagePicker.pickImage(
       source: ImageSource.camera,
     );
-    List<String> tags = [
-      "fire",
-      "best",
-      "amazing",
+    var tags = [
+      'fire',
+      'best',
+      'amazing',
     ];
     setState(() {
       _postPhoto = Photo(
@@ -62,7 +61,7 @@ class _CreatePostState extends State<CreatePost> {
   }
 
   Future<void> _cropPhoto() async {
-    File cropped = await ImageCropper.cropImage(
+    var cropped = await ImageCropper.cropImage(
       sourcePath: _postPhoto.imageFile.path,
     );
     setState(() {
@@ -75,7 +74,7 @@ class _CreatePostState extends State<CreatePost> {
     final user = Provider.of<User>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text("Create Post"),
+        title: Text('Create Post'),
       ),
       bottomNavigationBar: BottomAppBar(
         child: Row(

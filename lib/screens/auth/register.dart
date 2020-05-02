@@ -27,6 +27,7 @@ class _RegisterState extends State<Register> {
   bool _validateState = false;
   String error = '';
 
+  @override
   void dispose() {
     _pass.dispose();
     _confirmPass.dispose();
@@ -64,14 +65,14 @@ class _RegisterState extends State<Register> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          "User Name",
+          'User Name',
           style: kLabelStyle,
         ),
         SizedBox(height: 10.0),
         TextFormField(
           keyboardType: TextInputType.text,
           style: TextStyle(color: Colors.white),
-          decoration: kInputDecoration("Enter a user name", Icons.person),
+          decoration: kInputDecoration('Enter a user name', Icons.person),
           validator: (value) {
             if (value.isEmpty) {
               return "User name can't be empty";
@@ -89,17 +90,17 @@ class _RegisterState extends State<Register> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          "Email",
+          'Email',
           style: kLabelStyle,
         ),
         SizedBox(height: 10.0),
         TextFormField(
           keyboardType: TextInputType.text,
           style: TextStyle(color: Colors.white),
-          decoration: kInputDecoration("Enter your email", Icons.mail),
+          decoration: kInputDecoration('Enter your email', Icons.mail),
           validator: (value) {
             if (!isEmail(value.trim())) {
-              return "Enter a valid email";
+              return 'Enter a valid email';
             }
             return null;
           },
@@ -114,7 +115,7 @@ class _RegisterState extends State<Register> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          confirmPwd ? "Confirm Password" : "Password",
+          confirmPwd ? 'Confirm Password' : 'Password',
           style: kLabelStyle,
         ),
         SizedBox(height: 10.0),
@@ -123,15 +124,15 @@ class _RegisterState extends State<Register> {
           obscureText: true,
           keyboardType: TextInputType.text,
           style: TextStyle(color: Colors.white),
-          decoration: kInputDecoration("Enter a password", Icons.lock),
+          decoration: kInputDecoration('Enter a password', Icons.lock),
           validator: (String value) {
             if (confirmPwd) {
               if (_pass.text != _confirmPass.text) {
-                return "Passwords must match";
+                return 'Passwords must match';
               }
             } else {
               if (value.length < 6) {
-                return "Password must be longer than 6 characters";
+                return 'Password must be longer than 6 characters';
               }
             }
             return null;
@@ -172,7 +173,7 @@ class _RegisterState extends State<Register> {
   Widget _switchToSignIn() {
     return RichText(
       text: TextSpan(
-        text: "Already have an account? ",
+        text: 'Already have an account? ',
         style: TextStyle(fontSize: 16),
         children: [
           TextSpan(
@@ -227,7 +228,7 @@ class _RegisterState extends State<Register> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Text(
-                            "Register",
+                            'Register',
                             style: TextStyle(
                               color: Colors.white,
                               fontFamily: 'OpenSans',

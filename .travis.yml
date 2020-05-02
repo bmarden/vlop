@@ -1,0 +1,36 @@
+language: dart
+dart:
+  - stable
+dist: bionic
+env:
+  - COMMAND="test --coverage"
+  - COMMAND=analyze
+jobs:
+  exclude:
+    - if: NOT branch = master
+      env: COMMAND="test --coverage"
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - lib32stdc++6
+install:
+  - echo 'Running tests...'
+  - pwd
+before_script:
+  - cd ..
+  - if [ ! -f $HOME/flutter/bin/flutter ] ; then git clone https://github.com/flutter/flutter.git -b stable ; fi
+  - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
+  - flutter doctor
+  - cd $TRAVIS_BUILD_DIR
+  - gem install coveralls-lcov
+script:
+  - cd $TRAVIS_BUILD_DIR
+  - flutter $COMMAND
+after_success:
+  - coveralls-lcov coverage/lcov.info
+cache:
+  directories:
+    - $HOME/flutter
+    - $HOME/.pub-cache

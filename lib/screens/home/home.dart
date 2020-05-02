@@ -20,7 +20,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Home Page"),
+        title: Text('Home Page'),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
@@ -79,7 +79,7 @@ class _HomePageState extends State<HomePage> {
                 await _auth.logout();
               },
               title: Text(
-                "Sign out",
+                'Sign out',
                 style: kLabelStyle,
               ),
             ),
