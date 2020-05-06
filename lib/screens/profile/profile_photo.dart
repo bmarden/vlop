@@ -6,6 +6,7 @@ import 'package:vlop/models/photo.dart';
 import 'package:vlop/models/user.dart';
 import 'package:vlop/services/database.dart';
 import 'package:vlop/screens/profile/upload_profile_photo.dart';
+import 'dart:io';
 
 class TakePhoto extends StatefulWidget {
   _TakePhotoState createState() => _TakePhotoState();
