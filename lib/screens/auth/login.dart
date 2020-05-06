@@ -52,7 +52,7 @@ class _LoginState extends State<Login> {
   }
 
   Future<void> submitForm() async {
-    // setState(() => _loading = true);
+    setState(() => _loading = true);
     if (validateForm()) {
       dynamic result = await _auth.signInUserWithEmail(_email, _pass.text);
       if (result == null) {

@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -31,17 +33,22 @@ class DbService {
     });
   }
 
-  Future<void> addPostToUserData(String userId, String picId) {
+  /// Add imageData Id's to a user's postIds array
+  Future<void> _addPostToUserData(String userId, String picId) {
     return _userCollection.document(userId).setData({
       'postIds': FieldValue.arrayUnion([picId])
-    }, merge: true);
+    }, merge: true).catchError((e) => print(e.message));
   }
 
-  Future<void> addImageDataToCollections(Photo img) {
+  /// Add data about image to imageData collection
+  Future<void> addImageDataToCollections(Photo img, String path) async {
+    var downloadUrl = await _storage.ref().child(path).getDownloadURL();
     return _imgCollection.document(img.id).setData({
       'userOwner': img.userOwner,
       'tags': FieldValue.arrayUnion(img.tags),
-    });
+      'url': downloadUrl,
+      'path': path,
+    }).catchError((e) => print(e.message));
   }
 
   /// Returns a stream of UserData if a user is logged in
@@ -61,6 +68,19 @@ class DbService {
     });
   }
 
+  Stream<List<Photo>> get photoStream {
+    return _imgCollection.snapshots().map(
+          (snaps) =>
+              snaps.documents.map((doc) => Photo.fromFirestore(doc)).toList(),
+        );
+  }
+
+  /// Download single image
+  Future<Uint8List> downloadPhoto(String path) async {
+    var MAX_SIZE = 5 * 1024 * 1024;
+    return _storage.ref().child(path).getData(MAX_SIZE);
+  }
+
   // Get a single document by user id
   Future<UserData> getUserDoc() {
     return _userCollection
@@ -69,11 +89,11 @@ class DbService {
         .then((snap) => UserData.fromMap(snap.data));
   }
 
+  /// Upload Image to Firebase storage and store Image Data in Firestore
   StorageUploadTask uploadTask(Photo img, String userId) {
+    var path = 'images/${img.id}.png';
+    _addPostToUserData(userId, img.id);
     // Save the postId to the user's Posts array in their document
-    addPostToUserData(userId, img.id);
-    addImageDataToCollections(img);
-    var path = 'images/${userId}/${img.id}.png';
     return _storage.ref().child(path).putFile(img.imageFile);
   }
 }

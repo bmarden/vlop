@@ -17,10 +17,17 @@ class Upload extends StatefulWidget {
 class _UploadState extends State<Upload> {
   StorageUploadTask _uploadImage;
 
-  void _startUpload() {
+  void _startUpload() async {
     setState(() {
       _uploadImage = DbService().uploadTask(widget.photo, widget.user.uid);
     });
+    await _uploadImage.onComplete;
+    await _addImageData();
+  }
+
+  Future<void> _addImageData() async {
+    await DbService().addImageDataToCollections(
+        widget.photo, 'images/${widget.photo.id}.png');
   }
 
   @override
@@ -32,16 +39,20 @@ class _UploadState extends State<Upload> {
             var event = snapshot?.data?.snapshot;
             var progressPercent = event != null
                 ? event.bytesTransferred / event.totalByteCount
-                : 0;
+                : 0.0;
             return Column(
               children: <Widget>[
                 // Progress bar
                 LinearProgressIndicator(value: progressPercent),
-                Text('${(progressPercent * 100).toStringAsFixed(2)} % '),
+                Text(
+                  '${(progressPercent * 100).toStringAsFixed(0)}% ',
+                  style: Theme.of(context).textTheme.display2,
+                ),
                 if (_uploadImage.isComplete)
                   Text('Upload Complete!'),
                 if (_uploadImage.isInProgress) ...[
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       FlatButton(
                         child: Icon(Icons.cancel),
