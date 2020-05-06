@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vlop/models/photo.dart';
 import 'package:vlop/utilities/loading.dart';
-import 'dart:io';
 
 class Feed extends StatelessWidget {
   @override

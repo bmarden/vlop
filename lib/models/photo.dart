@@ -16,7 +16,7 @@ class Photo {
       id: doc.documentID,
       userOwner: data['userOwner'] ?? '',
       tags: data['tags'] as List ?? [],
-      url: data['url'],
+      url: data['url'] ?? '',
       imageFile: null,
     );
   }
