@@ -5,9 +5,6 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vlop/models/user.dart';
 
@@ -37,6 +34,10 @@ void main() {
 }
 
 dynamic userData() async {
-  final dynamic data = await File('assets/user_data.json').readAsString();
-  return json.decode(data).first;
+  var data = {
+    'userName': 'testUser',
+    'email': 'testuser@email.com',
+    'postIds': ['id1', 'id2', 'id3']
+  };
+  return data;
 }
