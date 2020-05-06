@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
-import 'package:vlop/services/auth_service.dart';
+import 'package:vlop/models/photo.dart';
+import 'package:vlop/screens/profile/profile_photo.dart';
 import 'package:provider/provider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vlop/models/user.dart';
 import 'package:vlop/services/database.dart';
 
@@ -12,10 +11,12 @@ class profilePage extends StatefulWidget {
 }
 
 class _profilePageState extends State<profilePage> {
-  File _profileImage;
+  Photo _profileImage;
+
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<UserData>(context);
+    final user = Provider.of<User>(context);
+    final userData = Provider.of<UserData>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text("My Profile"),
@@ -30,7 +31,17 @@ class _profilePageState extends State<profilePage> {
 
               child: Text('NO profile photo'),
             ),
-            Text(user.userName),
+            RaisedButton(
+              child: Text('Upload Profile Photo'),
+              onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => TakePhoto(),
+                    ),
+                  );
+                },
+            ),
+            Text(userData.userName),
             Container(
               height: 400,
               child: GridView.count(
