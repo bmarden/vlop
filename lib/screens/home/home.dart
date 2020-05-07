@@ -74,7 +74,7 @@ class _HomePageState extends State<HomePage> {
               DrawerHeader(
                 child: Text(
                   'Vlop',
-                  style: Theme.of(context).textTheme.display1,
+                  style: Theme.of(context).textTheme.headline4,
                   textAlign: TextAlign.center,
                 ),
                 decoration: kBoxGradient,

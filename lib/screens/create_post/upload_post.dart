@@ -46,7 +46,7 @@ class _UploadState extends State<Upload> {
                 LinearProgressIndicator(value: progressPercent),
                 Text(
                   '${(progressPercent * 100).toStringAsFixed(0)}% ',
-                  style: Theme.of(context).textTheme.display2,
+                  style: Theme.of(context).textTheme.headline3,
                 ),
                 if (_uploadImage.isComplete)
                   Text('Upload Complete!'),
