@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import 'package:vlop/models/photo.dart';
 import 'package:vlop/models/user.dart';
-import 'package:vlop/screens/create_post/upload_post.dart';
+// import 'package:vlop/screens/create_post/upload_post.dart';
 import 'package:vlop/services/database.dart';
 import 'package:vlop/utilities/constants.dart';
 import 'package:vlop/utilities/widgets.dart';
@@ -132,10 +132,29 @@ class _CreatePostState extends State<CreatePost> {
   }
 }
 
-class PostOptions extends StatelessWidget {
+class PostOptions extends StatefulWidget {
   final Photo photo;
 
   PostOptions({this.photo});
+
+  @override
+  _PostOptionsState createState() => _PostOptionsState();
+}
+
+class _PostOptionsState extends State<PostOptions> {
+  final tags = [
+    'these',
+    'are',
+    'some',
+    'tags',
+  ];
+  final tagController = TextEditingController();
+
+  @override
+  void dispose() {
+    tagController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -151,7 +170,7 @@ class PostOptions extends StatelessWidget {
               Container(
                 margin: EdgeInsets.all(5),
                 child: Image.file(
-                  photo.imageFile,
+                  widget.photo.imageFile,
                   height: 120,
                 ),
               ),
@@ -170,14 +189,42 @@ class PostOptions extends StatelessWidget {
             ],
           ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Container(
-                padding: EdgeInsets.all(20),
+                padding: EdgeInsets.only(top: 20),
                 width: 350,
                 child: TextFormField(
+                  controller: tagController,
                   decoration: kPostInputDecoration('Add tags...'),
                 ),
               ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Button(
+                onPressed: () {
+                  setState(() {
+                    tags.add(tagController.text);
+                  });
+                },
+                child: Text('Add tag'),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              for (var i = 0; i < tags.length; i++) ...[
+                Padding(
+                  padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                  child: Chip(
+                    label: Text(tags[i]),
+                  ),
+                ),
+              ],
             ],
           ),
         ],
