@@ -4,6 +4,7 @@ import 'package:vlop/models/photo.dart';
 import 'package:vlop/models/user.dart';
 import 'package:vlop/utilities/widgets.dart';
 import 'package:vlop/services/database.dart';
+import 'dart:io';
 
 class Upload extends StatefulWidget {
   final Photo photo;
@@ -22,6 +23,7 @@ class _UploadState extends State<Upload> {
       _uploadImage = DbService().uploadTaskProfile(widget.photo, widget.user.uid);
     });
   }
+
 
   @override
   Widget build(BuildContext context) {

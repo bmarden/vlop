@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:vlop/models/photo.dart';
 import 'package:vlop/screens/profile/profile_photo.dart';
 import 'package:provider/provider.dart';
 import 'package:vlop/models/user.dart';
@@ -9,10 +8,37 @@ class profilePage extends StatefulWidget {
   @override
   _profilePageState createState() => _profilePageState();
 }
-
 class _profilePageState extends State<profilePage> {
-  Photo _profileImage;
+  
+  Future<Widget> _DownloadProfilePhoto(BuildContext context,String userId) async{
+    final path = 'profile_images/${userId}.png';
+    Widget m;
+    await DbService(uid: userId).downloadTask(path).then((curPhoto) {
+      m = CircleAvatar(
+        backgroundImage: NetworkImage(curPhoto.url),radius: 100,
+        );
+    }).catchError((e){
+      print(e.error);
+    });
+    
+    return m;
+  }
 
+  /*Future<Widget> _DownloadUserPhotos(BuildContext context,String userid,final index) async{
+    UserData
+    final path = 'images/'
+    Widget m;
+    await DbService(uid: userid).downloadTask(path).then((curPhoto) {
+      m = CircleAvatar(
+        backgroundImage: NetworkImage(curPhoto?.url),radius: 100,
+        );
+    }).catchError((e){
+      print(e.error);
+    });
+    
+    return m;
+  }*/
+ 
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
@@ -24,22 +50,25 @@ class _profilePageState extends State<profilePage> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            CircleAvatar(
-              radius: 100,
-              //backgroundImage: FileImage(_profileImage),
-
-              child: Text('NO profile photo'),
+          children: <Widget> [
+            FutureBuilder(
+              future: _DownloadProfilePhoto(context, user.uid),
+              builder: (context,snapshot){
+                if(snapshot.connectionState == ConnectionState.done){
+                return snapshot.data;
+                }
+                return Text('no image');
+              },
             ),
             RaisedButton(
               child: Text('Upload Profile Photo'),
               onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => TakePhoto(),
-                    ),
-                  );
-                },
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => TakePhoto(),
+                  ),
+                );
+              },
             ),
             Text(userData.userName),
             Container(
@@ -48,9 +77,14 @@ class _profilePageState extends State<profilePage> {
                 crossAxisCount: 2,
                 children: List.generate(10, (index) {
                   return Center(
-                    child: Text(
-                      'Item $index',
-                      style: Theme.of(context).textTheme.headline,
+                    child: FutureBuilder(
+                     // future: _DownloadUserPhotos(context, user.uid,index),
+                      builder: (context,snapshot){
+                        if(snapshot.connectionState == ConnectionState.done){
+                        return snapshot.data;
+                        }
+                        return Text('no image');
+                      },
                     ),
                   );
                 }),

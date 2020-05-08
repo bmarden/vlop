@@ -3,10 +3,6 @@ import 'package:vlop/services/auth_service.dart';
 import 'package:vlop/screens/create_post/create_post.dart';
 import 'package:vlop/utilities/constants.dart';
 import 'package:vlop/screens/profile/profile.dart';
-import 'package:vlop/models/user.dart';
-import 'package:provider/provider.dart';
-import 'package:vlop/screens/profile/profile.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);

@@ -4,8 +4,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:vlop/models/photo.dart';
 import 'package:vlop/models/user.dart';
-import 'dart:io';
-import 'dart:typed_data';
 
 class DbService {
   final String uid;
@@ -85,16 +83,7 @@ class DbService {
     return _storage.ref().child(path).putFile(img.imageFile);
   }
 
- /// Download single image
-  Future<Uint8List> downloadPhoto(String path) async {
-    var MAX_SIZE = 5 * 1024 * 1024;
-    return _storage.ref().child(path).getData(MAX_SIZE);
+  Future<dynamic> downloadTask(String path) async {
+    return await _storage.ref().child(path).getDownloadURL();
   }
-
-  /*String downloadTaskProfile(String userId){
-    File _picture;
-    String path = 'profile_images/${userId}.png';
-    var url = async _storage.ref().child(path).getDownloadURL();
-    return _picture;
-  }*/
-}
+} 
