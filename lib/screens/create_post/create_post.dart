@@ -7,6 +7,8 @@ import 'package:vlop/models/photo.dart';
 import 'package:vlop/models/user.dart';
 import 'package:vlop/screens/create_post/upload_post.dart';
 import 'package:vlop/services/database.dart';
+import 'package:vlop/utilities/constants.dart';
+import 'package:vlop/utilities/widgets.dart';
 
 class CreatePost extends StatefulWidget {
   // @override
@@ -107,14 +109,21 @@ class _CreatePostState extends State<CreatePost> {
               ],
             ),
             // Upload(photo: _postPhoto, user: user),
-            FlatButton(
-                child: Text('Next'),
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                        builder: (context) => PostOptions(photo: _postPhoto)),
-                  );
-                }),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Button(
+                  child: Text('Next'),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => PostOptions(photo: _postPhoto),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
             // PostOptions(photo: _postPhoto),
           ],
         ],
@@ -134,31 +143,43 @@ class PostOptions extends StatelessWidget {
       appBar: AppBar(
         title: Text('Edit Post'),
       ),
-      body: Row(
+      body: Column(
         children: <Widget>[
-          Container(
-            child: Image.file(
-              photo.imageFile,
-              height: 100,
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.only(left: 20),
-            width: 300,
-            child: TextFormField(
-              minLines: 3,
-              maxLines: 5,
-              maxLength: 250,
-              decoration: InputDecoration(
-                hintText: 'Enter a caption...',
-                border: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Colors.black,
-                  ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Container(
+                margin: EdgeInsets.all(5),
+                child: Image.file(
+                  photo.imageFile,
+                  height: 120,
                 ),
               ),
-            ),
-          )
+              Expanded(
+                flex: 1,
+                child: Container(
+                  margin: EdgeInsets.all(5),
+                  child: TextField(
+                    keyboardType: TextInputType.multiline,
+                    maxLines: 3,
+                    maxLength: 250,
+                    decoration: kPostInputDecoration('Enter a caption...'),
+                  ),
+                ),
+              )
+            ],
+          ),
+          Row(
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.all(20),
+                width: 350,
+                child: TextFormField(
+                  decoration: kPostInputDecoration('Add tags...'),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );

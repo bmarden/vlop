@@ -25,17 +25,17 @@ final kDisplayStyle = TextStyle(
   fontFamily: 'Manrope',
 );
 
-final kBoxStyle = BoxDecoration(
-  color: Color(0xFF232F34),
-  borderRadius: BorderRadius.circular(14.0),
-  boxShadow: [
-    BoxShadow(
-      color: Colors.black12,
-      blurRadius: 6.0,
-      offset: Offset(0, 2),
+InputDecoration kPostInputDecoration(String hint) {
+  return InputDecoration(
+    hintText: hint,
+    border: OutlineInputBorder(),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(
+        color: Colors.black,
+      ),
     ),
-  ],
-);
+  );
+}
 
 final kBoxGradient = BoxDecoration(
   gradient: LinearGradient(
