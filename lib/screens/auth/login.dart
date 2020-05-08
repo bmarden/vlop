@@ -36,6 +36,7 @@ class _LoginState extends State<Login> {
     super.initState();
   }
 
+  @override
   void dispose() {
     _pass.dispose();
     super.dispose();
@@ -51,7 +52,7 @@ class _LoginState extends State<Login> {
   }
 
   Future<void> submitForm() async {
-    // setState(() => _loading = true);
+    setState(() => _loading = true);
     if (validateForm()) {
       dynamic result = await _auth.signInUserWithEmail(_email, _pass.text);
       if (result == null) {
@@ -73,17 +74,17 @@ class _LoginState extends State<Login> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          "Email",
+          'Email',
           style: kLabelStyle,
         ),
         SizedBox(height: 10.0),
         TextFormField(
           keyboardType: TextInputType.text,
           style: TextStyle(color: Colors.white),
-          decoration: kInputDecoration("Enter your email", Icons.mail),
+          decoration: kInputDecoration('Enter your email', Icons.mail),
           validator: (value) {
             if (!isEmail(value.trim())) {
-              return "Enter a valid email";
+              return 'Enter a valid email';
             }
             return null;
           },
@@ -98,7 +99,7 @@ class _LoginState extends State<Login> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          "Password",
+          'Password',
           style: kLabelStyle,
         ),
         SizedBox(height: 10.0),
@@ -107,7 +108,7 @@ class _LoginState extends State<Login> {
           obscureText: true,
           keyboardType: TextInputType.text,
           style: TextStyle(color: Colors.white),
-          decoration: kInputDecoration("Enter a password", Icons.lock),
+          decoration: kInputDecoration('Enter a password', Icons.lock),
           onSaved: (val) {
             _pass.text = val.trim();
           },
@@ -142,7 +143,7 @@ class _LoginState extends State<Login> {
   Widget _switchToRegister() {
     return RichText(
       text: TextSpan(
-        text: "Need an account? ",
+        text: 'Need an account? ',
         style: TextStyle(fontSize: 14),
         children: [
           TextSpan(
@@ -213,7 +214,7 @@ class _LoginState extends State<Login> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Text(
-                            "Sign in",
+                            'Sign in',
                             style: TextStyle(
                               color: Colors.white,
                               fontFamily: 'OpenSans',

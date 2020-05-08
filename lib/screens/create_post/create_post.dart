@@ -1,9 +1,8 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 import 'package:vlop/models/photo.dart';
 import 'package:vlop/models/user.dart';
 import 'package:vlop/screens/create_post/upload_post.dart';
@@ -11,6 +10,7 @@ import 'package:vlop/services/database.dart';
 
 class CreatePost extends StatefulWidget {
   // @override
+  @override
   _CreatePostState createState() => _CreatePostState();
 }
 
@@ -27,13 +27,14 @@ class _CreatePostState extends State<CreatePost> {
       print('no image found');
       return;
     }
-    List<String> tags = [
-      "fire",
-      "best",
-      "amazing",
+    var tags = [
+      'fire',
+      'best',
+      'amazing',
     ];
     setState(() {
       _postPhoto = Photo(
+        id: Uuid().v1(),
         imageFile: picture,
         userOwner: user.userName,
         tags: tags,
@@ -47,13 +48,14 @@ class _CreatePostState extends State<CreatePost> {
     var picture = await ImagePicker.pickImage(
       source: ImageSource.camera,
     );
-    List<String> tags = [
-      "fire",
-      "best",
-      "amazing",
+    var tags = [
+      'fire',
+      'best',
+      'amazing',
     ];
     setState(() {
       _postPhoto = Photo(
+        id: Uuid().v1(),
         imageFile: picture,
         userOwner: user.userName,
         tags: tags,
@@ -62,7 +64,7 @@ class _CreatePostState extends State<CreatePost> {
   }
 
   Future<void> _cropPhoto() async {
-    File cropped = await ImageCropper.cropImage(
+    var cropped = await ImageCropper.cropImage(
       sourcePath: _postPhoto.imageFile.path,
     );
     setState(() {
@@ -75,7 +77,7 @@ class _CreatePostState extends State<CreatePost> {
     final user = Provider.of<User>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text("Create Post"),
+        title: Text('Create Post'),
       ),
       bottomNavigationBar: BottomAppBar(
         child: Row(
