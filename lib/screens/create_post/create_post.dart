@@ -18,41 +18,19 @@ class _CreatePostState extends State<CreatePost> {
   Photo _postPhoto;
 
   /// Get image from the gallery
-  Future<void> _openGallery(BuildContext context, String userUid) async {
-    final user = await DbService(uid: userUid).getUserDoc();
-    var picture = await ImagePicker.pickImage(
-      source: ImageSource.gallery,
-    );
-    if (picture == null) {
-      print('no image found');
-      return;
-    }
-    var tags = [
-      'fire',
-      'best',
-      'amazing',
-    ];
-    setState(() {
-      _postPhoto = Photo(
-        id: Uuid().v1(),
-        imageFile: picture,
-        userOwner: user.userName,
-        tags: tags,
-      );
-    });
-  }
 
-  /// Take new picture from camera
-  Future<void> _openCamera(BuildContext context, String userUid) async {
+  Future<void> _pickImage(ImageSource source, String userUid,
+      {BuildContext context}) async {
     final user = await DbService(uid: userUid).getUserDoc();
-    var picture = await ImagePicker.pickImage(
-      source: ImageSource.camera,
-    );
+
     var tags = [
       'fire',
       'best',
       'amazing',
     ];
+    var picture = await ImagePicker.pickImage(source: source)
+        .catchError((onError) => (print(onError)));
+
     setState(() {
       _postPhoto = Photo(
         id: Uuid().v1(),
@@ -89,11 +67,13 @@ class _CreatePostState extends State<CreatePost> {
             ),
             IconButton(
               icon: Icon(Icons.camera_alt),
-              onPressed: () => _openCamera(context, user.uid),
+              onPressed: () =>
+                  _pickImage(ImageSource.camera, user.uid, context: context),
             ),
             IconButton(
               icon: Icon(Icons.photo_library),
-              onPressed: () => _openGallery(context, user.uid),
+              onPressed: () =>
+                  _pickImage(ImageSource.gallery, user.uid, context: context),
             ),
             Padding(
               padding: EdgeInsets.only(left: 5.0),
@@ -126,8 +106,59 @@ class _CreatePostState extends State<CreatePost> {
                 ),
               ],
             ),
-            Upload(photo: _postPhoto, user: user),
+            // Upload(photo: _postPhoto, user: user),
+            FlatButton(
+                child: Text('Next'),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) => PostOptions(photo: _postPhoto)),
+                  );
+                }),
+            // PostOptions(photo: _postPhoto),
           ],
+        ],
+      ),
+    );
+  }
+}
+
+class PostOptions extends StatelessWidget {
+  final Photo photo;
+
+  PostOptions({this.photo});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Edit Post'),
+      ),
+      body: Row(
+        children: <Widget>[
+          Container(
+            child: Image.file(
+              photo.imageFile,
+              height: 100,
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.only(left: 20),
+            width: 300,
+            child: TextFormField(
+              minLines: 3,
+              maxLines: 5,
+              maxLength: 250,
+              decoration: InputDecoration(
+                hintText: 'Enter a caption...',
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            ),
+          )
         ],
       ),
     );
