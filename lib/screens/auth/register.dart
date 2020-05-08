@@ -4,6 +4,7 @@ import 'package:string_validator/string_validator.dart';
 import 'package:vlop/services/auth_service.dart';
 import 'package:vlop/utilities/constants.dart';
 import 'package:vlop/utilities/loading.dart';
+import 'package:vlop/utilities/widgets.dart';
 
 class Register extends StatefulWidget {
   // Declare the function from auth_view. Will be used to change to login screen
@@ -149,26 +150,6 @@ class _RegisterState extends State<Register> {
     );
   }
 
-  Widget _submitBtn() {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 25.0),
-      width: 140.0,
-      height: 96.0,
-      child: RaisedButton(
-        elevation: 3.0,
-        onPressed: submitForm,
-        padding: EdgeInsets.all(10.0),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30.0),
-        ),
-        child: Text(
-          'Submit',
-          style: kLabelStyle,
-        ),
-      ),
-    );
-  }
-
   Widget _switchToSignIn() {
     return RichText(
       text: TextSpan(
@@ -226,7 +207,13 @@ class _RegisterState extends State<Register> {
                           _passwordTB(false),
                           SizedBox(height: 25.0),
                           _passwordTB(true),
-                          _submitBtn(),
+                          Button(
+                            onPressed: submitForm,
+                            child: Text(
+                              'Submit',
+                              style: kLabelStyle,
+                            ),
+                          ),
                           _switchToSignIn(),
                         ],
                       ),
