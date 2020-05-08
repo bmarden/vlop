@@ -31,7 +31,7 @@ class _HomePageState extends State<HomePage> {
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.grey[400],
+          // backgroundColor: Colors.grey[400],
           child: const Icon(Icons.add),
           onPressed: () {
             Navigator.of(context).push(
@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage> {
           },
         ),
         bottomNavigationBar: BottomAppBar(
-          color: Colors.blue[500],
+          // color: Colors.blue[500],
           elevation: 8.0,
           shape: CircularNotchedRectangle(),
           notchMargin: 6.0,

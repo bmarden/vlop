@@ -161,7 +161,6 @@ class _RegisterState extends State<Register> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
         ),
-        color: Colors.grey[800],
         child: Text(
           'Submit',
           style: kLabelStyle,
@@ -199,19 +198,7 @@ class _RegisterState extends State<Register> {
                 Container(
                   height: double.infinity,
                   width: double.infinity,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Color(0xFF73AEF5),
-                        Color(0xFF61A4F1),
-                        Color(0xFF478DE0),
-                        Color(0xFF398AE5),
-                      ],
-                      stops: [0.1, 0.4, 0.7, 0.9],
-                    ),
-                  ),
+                  decoration: kBoxGradient,
                 ),
                 Form(
                   key: _formKey,
@@ -229,12 +216,7 @@ class _RegisterState extends State<Register> {
                         children: <Widget>[
                           Text(
                             'Register',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'OpenSans',
-                              fontSize: 30.0,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: kDisplayStyle,
                           ),
                           SizedBox(height: 25.0),
                           _userNameTB(),

@@ -5,10 +5,19 @@ final kThemeData = _buildTheme();
 ThemeData _buildTheme() {
   final base = ThemeData.dark();
   return base.copyWith(
+    primaryColor: Color(0xFF344955),
+    accentColor: Color(0xFFF9AA33),
     buttonTheme: base.buttonTheme.copyWith(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30.0),
       ),
+      buttonColor: Color(0xFFF9AA33),
+    ),
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
+      backgroundColor: Color(0xFFF9AA33),
+    ),
+    bottomAppBarTheme: BottomAppBarTheme(
+      color: Colors.blueGrey[800],
     ),
     textTheme: _buildTextTheme(base.textTheme),
     primaryTextTheme: _buildTextTheme(base.primaryTextTheme),
