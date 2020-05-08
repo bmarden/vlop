@@ -9,7 +9,7 @@ class AuthSelect extends StatefulWidget {
 
 class _AuthSelect extends State<AuthSelect> {
   // Selecter, determines which screen to show
-  bool register = true;
+  bool register = false;
 
   // This function will give a way to switch between the login and register screens
   // within each of those classes
