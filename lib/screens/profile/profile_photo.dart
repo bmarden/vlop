@@ -9,6 +9,7 @@ import 'package:vlop/screens/profile/upload_profile_photo.dart';
 import 'dart:io';
 
 class TakePhoto extends StatefulWidget {
+  @override
   _TakePhotoState createState() => _TakePhotoState();
 }
 
@@ -17,7 +18,6 @@ class _TakePhotoState extends State<TakePhoto> {
 
   /// Get image from the gallery
   Future<void> _openGallery(BuildContext context, String userUid) async {
-    final user = await DbService(uid: userUid).getUserDoc();
     var picture = await ImagePicker.pickImage(
       source: ImageSource.gallery,
     );
@@ -42,7 +42,7 @@ class _TakePhotoState extends State<TakePhoto> {
   }
 
   Future<void> _cropPhoto() async {
-    File cropped = await ImageCropper.cropImage(
+    var cropped = await ImageCropper.cropImage(
       sourcePath: _profilePhoto.imageFile.path,
     );
     setState(() {
@@ -55,7 +55,7 @@ class _TakePhotoState extends State<TakePhoto> {
     final user = Provider.of<User>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text("Upload Profile Photo"),
+        title: Text('Upload Profile Photo'),
       ),
       bottomNavigationBar: BottomAppBar(
         child: Row(

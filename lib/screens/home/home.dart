@@ -62,7 +62,13 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.all(5.0),
                 child: IconButton(
                   icon: Icon(Icons.account_circle),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => ProfilePage(),
+                      ),
+                    );
+                  },
                 ),
               )
             ],

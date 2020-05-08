@@ -1,27 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:vlop/screens/profile/profile_photo.dart';
 import 'package:provider/provider.dart';
 import 'package:vlop/models/user.dart';
 import 'package:vlop/services/database.dart';
 
-class profilePage extends StatefulWidget {
+class ProfilePage extends StatefulWidget {
   @override
-  _profilePageState createState() => _profilePageState();
+  _ProfilePageState createState() => _ProfilePageState();
 }
-class _profilePageState extends State<profilePage> {
-  
-  Future<Widget> _DownloadProfilePhoto(BuildContext context,String userId) async{
+
+class _ProfilePageState extends State<ProfilePage> {
+  Future<Widget> _downloadProfilePhoto(
+      BuildContext context, String userId) async {
     final path = 'profile_images/${userId}.png';
-    Widget m;
-    await DbService(uid: userId).downloadTask(path).then((curPhoto) {
-      m = CircleAvatar(
-        backgroundImage: NetworkImage(curPhoto.url),radius: 100,
-        );
-    }).catchError((e){
-      print(e.error);
-    });
-    
-    return m;
+    var picUrl = await DbService(uid: userId).downloadTask(path);
+    if (picUrl != null) {
+      return CircleAvatar(
+        backgroundImage: NetworkImage(picUrl),
+        radius: 100,
+      );
+    }
+    return CircleAvatar(
+      backgroundImage: AssetImage('assets/images/default.jpg'),
+      radius: 50,
+    );
   }
 
   /*Future<Widget> _DownloadUserPhotos(BuildContext context,String userid,final index) async{
@@ -38,24 +41,24 @@ class _profilePageState extends State<profilePage> {
     
     return m;
   }*/
- 
+
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
     final userData = Provider.of<UserData>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text("My Profile"),
+        title: Text('My Profile'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget> [
+          children: <Widget>[
             FutureBuilder(
-              future: _DownloadProfilePhoto(context, user.uid),
-              builder: (context,snapshot){
-                if(snapshot.connectionState == ConnectionState.done){
-                return snapshot.data;
+              future: _downloadProfilePhoto(context, user.uid),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return snapshot.data;
                 }
                 return Text('no image');
               },
@@ -78,10 +81,10 @@ class _profilePageState extends State<profilePage> {
                 children: List.generate(10, (index) {
                   return Center(
                     child: FutureBuilder(
-                     // future: _DownloadUserPhotos(context, user.uid,index),
-                      builder: (context,snapshot){
-                        if(snapshot.connectionState == ConnectionState.done){
-                        return snapshot.data;
+                      // future: _DownloadUserPhotos(context, user.uid,index),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          return snapshot.data;
                         }
                         return Text('no image');
                       },

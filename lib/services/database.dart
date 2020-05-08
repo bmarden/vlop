@@ -98,11 +98,16 @@ class DbService {
   }
 
   StorageUploadTask uploadTaskProfile(Photo img, String userId) {
-    String path = 'profile_images/${userId}.png';
+    var path = 'profile_images/${userId}.png';
     return _storage.ref().child(path).putFile(img.imageFile);
   }
 
-  Future<dynamic> downloadTask(String path) async {
-    return await _storage.ref().child(path).getDownloadURL();
+  Future downloadTask(String path) async {
+    try {
+      return await _storage.ref().child(path).getDownloadURL();
+    } catch (e) {
+      print(e);
+      return null;
+    }
   }
-} 
+}

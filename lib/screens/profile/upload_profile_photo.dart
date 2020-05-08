@@ -20,10 +20,10 @@ class _UploadState extends State<Upload> {
 
   void _startUpload() {
     setState(() {
-      _uploadImage = DbService().uploadTaskProfile(widget.photo, widget.user.uid);
+      _uploadImage =
+          DbService().uploadTaskProfile(widget.photo, widget.user.uid);
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class _UploadState extends State<Upload> {
                 LinearProgressIndicator(value: progressPercent),
                 Text('${(progressPercent * 100).toStringAsFixed(2)} % '),
                 if (_uploadImage.isComplete)
-                  Text("Upload Complete!"),
+                  Text('Upload Complete!'),
                 if (_uploadImage.isInProgress) ...[
                   Row(
                     children: <Widget>[
