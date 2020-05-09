@@ -25,11 +25,6 @@ class _CreatePostState extends State<CreatePost> {
       {BuildContext context}) async {
     final user = await DbService(uid: userUid).getUserDoc();
 
-    var tags = [
-      'fire',
-      'best',
-      'amazing',
-    ];
     var picture = await ImagePicker.pickImage(source: source)
         .catchError((onError) => (print(onError)));
 
@@ -38,7 +33,8 @@ class _CreatePostState extends State<CreatePost> {
         id: Uuid().v1(),
         imageFile: picture,
         userOwner: user.userName,
-        tags: tags,
+        caption: '',
+        tags: [],
       );
     });
   }
@@ -146,10 +142,21 @@ class PostOptions extends StatefulWidget {
 
 class _PostOptionsState extends State<PostOptions> {
   final tagController = TextEditingController();
+  final capController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    capController.text = widget.photo.caption;
+    capController.addListener(() {
+      widget.photo.caption = capController.text;
+    });
+  }
 
   @override
   void dispose() {
     tagController.dispose();
+    capController.dispose();
     super.dispose();
   }
 
@@ -176,7 +183,8 @@ class _PostOptionsState extends State<PostOptions> {
                   flex: 1,
                   child: Container(
                     margin: EdgeInsets.all(5),
-                    child: TextField(
+                    child: TextFormField(
+                      controller: capController,
                       keyboardType: TextInputType.multiline,
                       maxLines: 3,
                       maxLength: 250,
@@ -237,10 +245,10 @@ class _PostOptionsState extends State<PostOptions> {
               child: Text('Next'),
               onPressed: () {
                 Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        Upload(photo: widget.photo, userId: widget.userId),
-                  ),
+                  MaterialPageRoute(builder: (context) {
+                    // widget.photo.caption = capController.text;
+                    return Upload(photo: widget.photo, userId: widget.userId);
+                  }),
                 );
               },
             ),

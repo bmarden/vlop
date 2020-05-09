@@ -48,6 +48,7 @@ class DbService {
       'tags': FieldValue.arrayUnion(img.tags),
       'url': downloadUrl,
       'path': path,
+      'caption': img.caption,
     }).catchError((e) => print(e.message));
   }
 

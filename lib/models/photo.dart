@@ -4,8 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Photo {
   final String id;
   final String userOwner;
-  final List<dynamic> tags;
-  final String caption;
+  List<dynamic> tags;
+  String caption;
   final String url;
   File imageFile;
 
@@ -16,6 +16,10 @@ class Photo {
       this.caption,
       this.id,
       this.url});
+
+  set setCaption(String c) {
+    caption = c;
+  }
 
   factory Photo.fromFirestore(DocumentSnapshot doc) {
     Map data = doc.data;
