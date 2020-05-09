@@ -97,4 +97,18 @@ class DbService {
     // Save the postId to the user's Posts array in their document
     return _storage.ref().child(path).putFile(img.imageFile);
   }
+
+  StorageUploadTask uploadTaskProfile(Photo img, String userId) {
+    var path = 'profile_images/${userId}.png';
+    return _storage.ref().child(path).putFile(img.imageFile);
+  }
+
+  Future downloadTask(String path) async {
+    try {
+      return await _storage.ref().child(path).getDownloadURL();
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
 }

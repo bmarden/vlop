@@ -6,6 +6,7 @@ import 'package:vlop/services/auth_service.dart';
 import 'package:vlop/screens/create_post/create_post.dart';
 import 'package:vlop/services/database.dart';
 import 'package:vlop/utilities/constants.dart';
+import 'package:vlop/screens/profile/profile.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -60,7 +61,13 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.all(5.0),
                 child: IconButton(
                   icon: Icon(Icons.account_circle),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => ProfilePage(),
+                      ),
+                    );
+                  },
                 ),
               )
             ],
