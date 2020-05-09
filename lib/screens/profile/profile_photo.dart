@@ -4,9 +4,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:provider/provider.dart';
 import 'package:vlop/models/photo.dart';
 import 'package:vlop/models/user.dart';
-import 'package:vlop/services/database.dart';
 import 'package:vlop/screens/profile/upload_profile_photo.dart';
-import 'dart:io';
 
 class TakePhoto extends StatefulWidget {
   @override
@@ -30,7 +28,6 @@ class _TakePhotoState extends State<TakePhoto> {
 
   /// Take new picture from camera
   Future<void> _openCamera(BuildContext context, String userUid) async {
-    final user = await DbService(uid: userUid).getUserDoc();
     var picture = await ImagePicker.pickImage(
       source: ImageSource.camera,
     );

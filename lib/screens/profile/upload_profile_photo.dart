@@ -4,7 +4,6 @@ import 'package:vlop/models/photo.dart';
 import 'package:vlop/models/user.dart';
 import 'package:vlop/utilities/widgets.dart';
 import 'package:vlop/services/database.dart';
-import 'dart:io';
 
 class Upload extends StatefulWidget {
   final Photo photo;
@@ -32,9 +31,9 @@ class _UploadState extends State<Upload> {
           stream: _uploadImage.events,
           builder: (context, snapshot) {
             var event = snapshot?.data?.snapshot;
-            double progressPercent = event != null
+            var progressPercent = event != null
                 ? event.bytesTransferred / event.totalByteCount
-                : 0;
+                : 0.0;
             return Column(
               children: <Widget>[
                 // Progress bar
