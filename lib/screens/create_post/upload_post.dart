@@ -99,6 +99,19 @@ class _AfterUploadState extends State<AfterUpload> {
       body: Container(
         child: Column(
           children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(top: 50),
+                  child: Text(
+                    'Upload Complete',
+                    style: Theme.of(context).textTheme.headline4,
+                  ),
+                ),
+              ],
+            ),
             Center(
               child: Container(
                 width: 200,
@@ -113,7 +126,7 @@ class _AfterUploadState extends State<AfterUpload> {
             ),
             Center(
               child: Button(
-                child: Text('Upload Complete!'),
+                child: Text('Return Home'),
                 onPressed: () => Navigator.of(context).pop(),
               ),
             ),
