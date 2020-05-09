@@ -30,7 +30,10 @@ class Feed extends StatelessWidget {
               padding: const EdgeInsets.all(10.0),
               child: Text('posted by: ${curPhoto.userOwner}'),
             ),
-            Image.network(curPhoto.url),
+            Image.network(curPhoto?.url,
+                loadingBuilder: (context, child, progress) {
+              return progress == null ? child : LinearProgressIndicator();
+            }),
           ],
         ),
       ),

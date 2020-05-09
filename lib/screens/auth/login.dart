@@ -4,6 +4,7 @@ import 'package:string_validator/string_validator.dart';
 import 'package:vlop/services/auth_service.dart';
 import 'package:vlop/utilities/constants.dart';
 import 'package:vlop/utilities/loading.dart';
+import 'package:vlop/utilities/widgets.dart';
 
 class Login extends StatefulWidget {
   // Declare the function from auth_view. Will be used to change to register screen
@@ -58,8 +59,6 @@ class _LoginState extends State<Login> {
       if (result == null) {
         setState(() => _loading = false);
         _buildErrorDialog(context, "Couldn't login");
-      } else {
-        setState(() => _validateState = true);
       }
     } else {
       setState(() {
@@ -117,29 +116,6 @@ class _LoginState extends State<Login> {
     );
   }
 
-  Widget _submitBtn() {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 25.0),
-      width: 140.0,
-      height: 96.0,
-      child: RaisedButton(
-        elevation: 3.0,
-        onPressed: () async {
-          await submitForm();
-        },
-        padding: EdgeInsets.all(10.0),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30.0),
-        ),
-        color: Colors.grey[800],
-        child: Text(
-          'Submit',
-          style: kLabelStyle,
-        ),
-      ),
-    );
-  }
-
   Widget _switchToRegister() {
     return RichText(
       text: TextSpan(
@@ -185,19 +161,7 @@ class _LoginState extends State<Login> {
                 Container(
                   height: double.infinity,
                   width: double.infinity,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Color(0xFF73AEF5),
-                        Color(0xFF61A4F1),
-                        Color(0xFF478DE0),
-                        Color(0xFF398AE5),
-                      ],
-                      stops: [0.1, 0.4, 0.7, 0.9],
-                    ),
-                  ),
+                  decoration: kBoxGradient,
                 ),
                 Form(
                   key: _formKey,
@@ -215,17 +179,21 @@ class _LoginState extends State<Login> {
                         children: <Widget>[
                           Text(
                             'Sign in',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'OpenSans',
-                              fontSize: 30.0,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: kDisplayStyle,
                           ),
                           _emailTB(),
                           SizedBox(height: 25.0),
                           _passwordTB(),
-                          _submitBtn(),
+                          Button(
+                            onPressed: () async {
+                              await submitForm();
+                            },
+                            child: Text(
+                              'Submit',
+                              style: kLabelStyle,
+                            ),
+                          ),
+                          // _submitBtn(),
                           _switchToRegister(),
                         ],
                       ),

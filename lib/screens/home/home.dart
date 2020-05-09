@@ -26,12 +26,12 @@ class _HomePageState extends State<HomePage> {
     return StreamProvider<List<Photo>>.value(
       value: _db.photoStream,
       child: Scaffold(
+        extendBody: true,
         appBar: AppBar(
           title: Text('Home Page'),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.grey[400],
           child: const Icon(Icons.add),
           onPressed: () {
             Navigator.of(context).push(
@@ -42,10 +42,9 @@ class _HomePageState extends State<HomePage> {
           },
         ),
         bottomNavigationBar: BottomAppBar(
-          color: Colors.blue[500],
           elevation: 8.0,
           shape: CircularNotchedRectangle(),
-          notchMargin: 6.0,
+          notchMargin: 4.0,
           child: Row(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -74,7 +73,7 @@ class _HomePageState extends State<HomePage> {
               DrawerHeader(
                 child: Text(
                   'Vlop',
-                  style: Theme.of(context).textTheme.display1,
+                  style: Theme.of(context).textTheme.headline4,
                   textAlign: TextAlign.center,
                 ),
                 decoration: kBoxGradient,

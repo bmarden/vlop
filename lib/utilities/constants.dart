@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 final kHintText = TextStyle(
   color: Colors.white54,
-  fontFamily: 'OpenSans',
+  fontFamily: 'Manrope',
 );
 
 final kLabelStyle = TextStyle(
@@ -15,29 +15,39 @@ final kSmallText = TextStyle(
   color: Colors.white,
   fontSize: 16,
   fontWeight: FontWeight.bold,
-  fontFamily: 'OpenSans',
+  fontFamily: 'Manrope',
 );
 
-final kBoxStyle = BoxDecoration(
-  color: Color(0xFF6CA8F1),
-  borderRadius: BorderRadius.circular(14.0),
-  boxShadow: [
-    BoxShadow(
-      color: Colors.black12,
-      blurRadius: 6.0,
-      offset: Offset(0, 2),
-    ),
-  ],
+final kDisplayStyle = TextStyle(
+  color: Colors.white,
+  fontWeight: FontWeight.bold,
+  fontSize: 35.0,
+  fontFamily: 'Manrope',
 );
+
+InputDecoration kPostInputDecoration(String hint) {
+  return InputDecoration(
+    hintText: hint,
+    border: OutlineInputBorder(),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(
+        color: Colors.black,
+      ),
+    ),
+  );
+}
 
 final kBoxGradient = BoxDecoration(
   gradient: LinearGradient(
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
     colors: <Color>[
-      Color(0xFF73AEF5),
-      Color(0xFF61A4F1),
-      Color(0xFF478DE0),
-      Color(0xFF398AE5),
+      Color(0xFF232F34),
+      Color(0xFF344955),
+      Color(0xFF4A6572),
+      Colors.blueGrey[400],
     ],
+    stops: [0.1, 0.4, 0.7, 1.0],
   ),
 );
 
@@ -49,13 +59,13 @@ InputDecoration kInputDecoration(String hint, IconData icon) {
     ),
     focusedBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(30.0),
-      borderSide: BorderSide(color: Colors.blue[100]),
+      borderSide: BorderSide(color: Color(0xFFF9AA33)),
     ),
     enabledBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(30.0),
       borderSide: BorderSide(color: Colors.grey[600]),
     ),
-    fillColor: Color(0xFF6CA8F1),
+    fillColor: Colors.blueGrey[400],
     filled: true,
     contentPadding: EdgeInsets.only(top: 14.0),
     prefixIcon: Icon(

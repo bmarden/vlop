@@ -10,10 +10,10 @@ class Button extends StatelessWidget {
   Button({
     Key key,
     @required this.child,
-    this.color = Colors.blue,
-    this.width = 100.0,
-    this.height = 40.0,
-    this.onPressed,
+    this.color = const Color(0xFFF9AA33),
+    this.width = 140.0,
+    this.height = 96.0,
+    @required this.onPressed,
   }) : super(key: key);
 
   @override
@@ -21,19 +21,16 @@ class Button extends StatelessWidget {
     return Container(
       width: width,
       height: height,
-      padding: EdgeInsets.all(10.0),
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(30.0),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
+      padding: EdgeInsets.symmetric(vertical: 25.0),
+      child: RaisedButton(
+        elevation: 3.0,
+        onPressed: onPressed,
+        padding: EdgeInsets.all(10.0),
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
-          onTap: onPressed,
-          child: Center(
-            child: child,
-          ),
+        ),
+        child: Center(
+          child: child,
         ),
       ),
     );
