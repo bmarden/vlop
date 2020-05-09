@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import 'package:vlop/models/photo.dart';
 import 'package:vlop/models/user.dart';
-// import 'package:vlop/screens/create_post/upload_post.dart';
+import 'package:vlop/screens/create_post/upload_post.dart';
 import 'package:vlop/services/database.dart';
 import 'package:vlop/utilities/constants.dart';
 import 'package:vlop/utilities/widgets.dart';
@@ -117,7 +117,10 @@ class _CreatePostState extends State<CreatePost> {
                   onPressed: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => PostOptions(photo: _postPhoto),
+                        builder: (context) => PostOptions(
+                          photo: _postPhoto,
+                          userId: user.uid,
+                        ),
                       ),
                     );
                   },
@@ -134,20 +137,14 @@ class _CreatePostState extends State<CreatePost> {
 
 class PostOptions extends StatefulWidget {
   final Photo photo;
-
-  PostOptions({this.photo});
+  final String userId;
+  PostOptions({this.photo, this.userId});
 
   @override
   _PostOptionsState createState() => _PostOptionsState();
 }
 
 class _PostOptionsState extends State<PostOptions> {
-  final tags = [
-    'these',
-    'are',
-    'some',
-    'tags',
-  ];
   final tagController = TextEditingController();
 
   @override
@@ -162,72 +159,93 @@ class _PostOptionsState extends State<PostOptions> {
       appBar: AppBar(
         title: Text('Edit Post'),
       ),
-      body: Column(
-        children: <Widget>[
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Container(
-                margin: EdgeInsets.all(5),
-                child: Image.file(
-                  widget.photo.imageFile,
-                  height: 120,
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Container(
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Container(
                   margin: EdgeInsets.all(5),
-                  child: TextField(
-                    keyboardType: TextInputType.multiline,
-                    maxLines: 3,
-                    maxLength: 250,
-                    decoration: kPostInputDecoration('Enter a caption...'),
+                  child: Image.file(
+                    widget.photo.imageFile,
+                    height: 120,
                   ),
                 ),
-              )
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.only(top: 20),
-                width: 350,
-                child: TextFormField(
-                  controller: tagController,
-                  decoration: kPostInputDecoration('Add tags...'),
-                ),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Button(
-                onPressed: () {
-                  setState(() {
-                    tags.add(tagController.text);
-                  });
-                },
-                child: Text('Add tag'),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              for (var i = 0; i < tags.length; i++) ...[
-                Padding(
-                  padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
-                  child: Chip(
-                    label: Text(tags[i]),
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    margin: EdgeInsets.all(5),
+                    child: TextField(
+                      keyboardType: TextInputType.multiline,
+                      maxLines: 3,
+                      maxLength: 250,
+                      decoration: kPostInputDecoration('Enter a caption...'),
+                    ),
+                  ),
+                )
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.only(top: 20),
+                  width: 350,
+                  child: TextFormField(
+                    controller: tagController,
+                    decoration: kPostInputDecoration('Add tags...'),
                   ),
                 ),
               ],
-            ],
-          ),
-        ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Button(
+                  onPressed: () {
+                    setState(() {
+                      widget.photo.tags.add(tagController.text);
+                      tagController.clear();
+                    });
+                  },
+                  child: Text('Add tag'),
+                ),
+              ],
+            ),
+            Container(
+              height: 150.0,
+              child: Wrap(
+                children: <Widget>[
+                  for (var i = 0; i < widget.photo.tags.length; i++) ...[
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                      child: InputChip(
+                        onDeleted: () {
+                          setState(() {
+                            widget.photo.tags.removeAt(i);
+                          });
+                        },
+                        label: Text(widget.photo.tags[i]),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            Button(
+              child: Text('Next'),
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        Upload(photo: widget.photo, userId: widget.userId),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
