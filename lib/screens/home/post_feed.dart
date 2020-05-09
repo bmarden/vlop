@@ -32,7 +32,7 @@ class Feed extends StatelessWidget {
             ),
             Image.network(curPhoto?.url,
                 loadingBuilder: (context, child, progress) {
-              return progress == null ? child : LinearProgressIndicator();
+              return progress == null ? child : CircularProgressIndicator();
             }),
           ],
         ),

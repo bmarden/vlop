@@ -1,103 +1,124 @@
-import 'package:firebase_storage/firebase_storage.dart';
+import 'dart:async';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:vlop/models/photo.dart';
 import 'package:vlop/utilities/widgets.dart';
 import 'package:vlop/services/database.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 
-class Upload extends StatefulWidget {
+class Upload extends StatelessWidget {
   final Photo photo;
   final String userId;
-  Upload({Key key, this.photo, this.userId}) : super(key: key);
 
-  @override
-  _UploadState createState() => _UploadState();
-}
-
-class _UploadState extends State<Upload> {
-  StorageUploadTask _uploadImage;
-
-  void _startUpload() async {
-    setState(() {
-      _uploadImage = DbService().uploadTask(widget.photo, widget.userId);
-    });
-    await _uploadImage.onComplete;
-    await _addImageData();
-  }
+  Upload({this.photo, this.userId});
 
   Future<void> _addImageData() async {
-    await DbService().addImageDataToCollections(
-        widget.photo, 'images/${widget.photo.id}.png');
+    await DbService()
+        .addImageDataToCollections(photo, 'images/${photo.id}.png');
   }
 
   @override
   Widget build(BuildContext context) {
+    var pr = ProgressDialog(
+      context,
+      type: ProgressDialogType.Download,
+      isDismissible: true,
+      showLogs: true,
+    );
+    pr.style(
+      message: 'Uploading post',
+      borderRadius: 10.0,
+      backgroundColor: Theme.of(context).primaryColor,
+      elevation: 10.0,
+      insetAnimCurve: Curves.easeInOut,
+      progress: 0.0,
+      progressWidget: CircularProgressIndicator(),
+      progressWidgetAlignment: Alignment.center,
+      maxProgress: 100.0,
+      progressTextStyle: TextStyle(
+          color: Colors.white, fontSize: 13.0, fontWeight: FontWeight.w400),
+      messageTextStyle: TextStyle(
+          color: Colors.white, fontSize: 19.0, fontWeight: FontWeight.w600),
+    );
+
+    var _uploadTask;
     return Scaffold(
       appBar: AppBar(
         title: Text('Upload'),
       ),
       body: Column(
         children: <Widget>[
-          Image.file(widget.photo.imageFile),
-          _uploadImage == null
-              ? Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Button(
-                      child: Text(
-                        'Upload',
-                      ),
-                      color: Colors.blue[700],
-                      onPressed: _startUpload,
-                    ),
-                  ],
-                )
-              : StreamBuilder<StorageTaskEvent>(
-                  stream: _uploadImage.events,
-                  builder: (context, snapshot) {
-                    var event = snapshot?.data?.snapshot;
+          Image.file(
+            photo.imageFile,
+            width: 300,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Button(
+                child: Text(
+                  'Upload',
+                ),
+                onPressed: () async {
+                  await pr.show();
+                  _uploadTask = DbService().uploadTask(photo, userId);
+
+                  await _uploadTask.events.listen((data) {
+                    var event = data?.snapshot;
                     var progressPercent = event != null
                         ? event.bytesTransferred / event.totalByteCount
                         : 0.0;
-                    return Column(
-                      children: <Widget>[
-                        // Progress bar
-                        LinearProgressIndicator(value: progressPercent),
-                        Text(
-                          '${(progressPercent * 100).toStringAsFixed(0)}% ',
-                          style: Theme.of(context).textTheme.headline3,
-                        ),
-                        if (_uploadImage.isComplete)
-                          Text('Upload Complete!'),
-                        if (_uploadImage.isInProgress) ...[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              FlatButton(
-                                child: Icon(Icons.cancel),
-                                onPressed: _uploadImage.cancel,
-                              ),
-                              FlatButton(
-                                child: Icon(Icons.pause),
-                                onPressed: _uploadImage.pause,
-                              ),
-                            ],
-                          ),
-                        ] else ...[
-                          Icon(
-                            Icons.check_circle,
-                            color: Colors.green[600],
-                          ),
-                        ],
-                        if (_uploadImage.isPaused)
-                          FlatButton(
-                            child: Icon(Icons.play_arrow),
-                            onPressed: _uploadImage.resume,
-                          ),
-                      ],
-                    );
-                  },
-                ),
+                    pr.update(progress: progressPercent * 100);
+                    if (_uploadTask.isComplete) {
+                      pr.hide().whenComplete(() => print(pr.isShowing()));
+                      _addImageData();
+                      Navigator.of(context).popUntil((route) => route.isFirst);
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => AfterUpload()));
+                    }
+                  });
+                },
+              ),
+            ],
+          ),
         ],
+      ),
+    );
+  }
+}
+
+class AfterUpload extends StatefulWidget {
+  @override
+  _AfterUploadState createState() => _AfterUploadState();
+}
+
+class _AfterUploadState extends State<AfterUpload> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        child: Column(
+          children: <Widget>[
+            Center(
+              child: Container(
+                width: 200,
+                height: 200,
+                child: FlareActor(
+                  'assets/checkmark.flr',
+                  alignment: Alignment.center,
+                  fit: BoxFit.contain,
+                  animation: 'go',
+                ),
+              ),
+            ),
+            Center(
+              child: Button(
+                child: Text('Upload Complete!'),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
