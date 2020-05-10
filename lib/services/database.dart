@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -9,7 +7,8 @@ import 'package:vlop/models/user.dart';
 
 class DbService {
   final String uid;
-  DbService({this.uid});
+  final String userName;
+  DbService({this.uid, this.userName});
 
   // Instance of FirebaseAuth
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -76,12 +75,6 @@ class DbService {
         );
   }
 
-  /// Download single image
-  Future<Uint8List> downloadPhoto(String path) async {
-    var MAX_SIZE = 5 * 1024 * 1024;
-    return _storage.ref().child(path).getData(MAX_SIZE);
-  }
-
   // Get a single document by user id
   Future<UserData> getUserDoc() {
     return _userCollection
@@ -98,14 +91,61 @@ class DbService {
     return _storage.ref().child(path).putFile(img.imageFile);
   }
 
+  // TODO Merge with uploadTask
   StorageUploadTask uploadTaskProfile(Photo img, String userId) {
     var path = 'profile_images/${userId}.png';
     return _storage.ref().child(path).putFile(img.imageFile);
   }
 
+  // Gets single photo from firebase
   Future downloadTask(String path) async {
     try {
       return await _storage.ref().child(path).getDownloadURL();
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
+  Stream<List<Photo>> get userPosts {
+    // var userName = _userCollection
+    //     .document(uid)
+    //     .get()
+    //     .then((doc) => UserData.fromMap(doc.data))
+    //     .then((usr) => usr.userName);
+
+    var photos = _imgCollection
+        .where('userOwner', isEqualTo: userName)
+        .snapshots()
+        .map((snapshots) => snapshots.documents
+            .map((snap) => Photo.fromFirestore(snap))
+            .toList());
+    return photos;
+  }
+
+  // Get a list of postIds and then returns the urls from Firebase Storage
+  Future<List<Photo>> getUserPosts() async {
+    try {
+      var doc = await _userCollection
+          .document(uid)
+          .get()
+          .then((doc) => UserData.fromMap(doc.data));
+      return _imgCollection
+          .where('userOwner', isEqualTo: doc.userName)
+          .getDocuments()
+          .then((snapshots) => snapshots.documents
+              .map((snap) => Photo.fromFirestore(snap))
+              .toList());
+      // var postIds = await _userCollection
+      //     .document(uid)
+      //     .get()
+      //     .then((doc) => doc.data['postIds']);
+
+      //   var results = await _imgCollection.getDocuments();
+      //   return results.documents
+      //       .where((map) => postIds.documents.contains(map.documentID))
+      //       .map((d) => Photo.fromFirestore(d))
+      //       .toList();
     } catch (e) {
       print(e);
       return null;
