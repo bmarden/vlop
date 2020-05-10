@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:vlop/screens/profile/profile_photo.dart';
 import 'package:provider/provider.dart';
 import 'package:vlop/models/user.dart';
@@ -26,21 +25,6 @@ class _ProfilePageState extends State<ProfilePage> {
       radius: 50,
     );
   }
-
-  /*Future<Widget> _DownloadUserPhotos(BuildContext context,String userid,final index) async{
-    UserData
-    final path = 'images/'
-    Widget m;
-    await DbService(uid: userid).downloadTask(path).then((curPhoto) {
-      m = CircleAvatar(
-        backgroundImage: NetworkImage(curPhoto?.url),radius: 100,
-        );
-    }).catchError((e){
-      print(e.error);
-    });
-    
-    return m;
-  }*/
 
   @override
   Widget build(BuildContext context) {
