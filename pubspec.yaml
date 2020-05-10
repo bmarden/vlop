@@ -49,7 +49,7 @@ flutter:
   assets:
     # Animation from https://rive.app/a/pollux/files/flare/success-check/preview
     - assets/checkmark.flr
-    - assets/images/default.jpg
+    - assets/images/default.png
   fonts:
     - family: Manrope
       fonts:

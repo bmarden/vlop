@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:vlop/models/photo.dart';
 import 'package:vlop/screens/profile/profile_photo.dart';
 import 'package:provider/provider.dart';
 import 'package:vlop/models/user.dart';
@@ -10,6 +12,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  // Gets a profile photo from Firebase
   Future<Widget> _downloadProfilePhoto(
       BuildContext context, String userId) async {
     final path = 'profile_images/${userId}.png';
@@ -20,11 +23,20 @@ class _ProfilePageState extends State<ProfilePage> {
         radius: 100,
       );
     }
-    return CircleAvatar(
-      backgroundImage: AssetImage('assets/images/default.jpg'),
-      radius: 50,
+    return ClipOval(
+      child: Image.asset(
+        'assets/images/default.png',
+        width: 100,
+        height: 100,
+        fit: BoxFit.fill,
+        color: Colors.blueGrey[100],
+      ),
     );
   }
+
+  // _getProfilePictures() {
+
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -60,21 +72,26 @@ class _ProfilePageState extends State<ProfilePage> {
             Text(userData.userName),
             Container(
               height: 400,
-              child: GridView.count(
-                crossAxisCount: 2,
-                children: List.generate(10, (index) {
-                  return Center(
-                    child: FutureBuilder(
-                      // future: _DownloadUserPhotos(context, user.uid,index),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.done) {
-                          return snapshot.data;
-                        }
-                        return Text('no image');
-                      },
-                    ),
-                  );
-                }),
+              child: StreamBuilder<List<Photo>>(
+                stream: DbService(userName: userData.userName).userPosts,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return GridView.builder(
+                      itemCount: snapshot.data.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 1,
+                        mainAxisSpacing: 10,
+                      ),
+                      itemBuilder: (context, index) => CachedNetworkImage(
+                        imageUrl: snapshot.data[index]?.url,
+                      ),
+                    );
+                  } else {
+                    return CircularProgressIndicator();
+                  }
+                },
               ),
             ),
           ],
