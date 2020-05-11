@@ -5,6 +5,7 @@ import 'package:vlop/screens/profile/profile_photo.dart';
 import 'package:provider/provider.dart';
 import 'package:vlop/models/user.dart';
 import 'package:vlop/services/database.dart';
+import 'package:vlop/utilities/loading.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -42,61 +43,69 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
     final userData = Provider.of<UserData>(context);
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('My Profile'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            FutureBuilder(
-              future: _downloadProfilePhoto(context, user.uid),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  return snapshot.data;
-                }
-                return Text('no image');
-              },
+    return userData == null
+        ? Loading()
+        : Scaffold(
+            appBar: AppBar(
+              title: Text('My Profile'),
             ),
-            RaisedButton(
-              child: Text('Upload Profile Photo'),
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => TakePhoto(),
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  FutureBuilder(
+                    future: _downloadProfilePhoto(context, user.uid),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        return snapshot.data;
+                      }
+                      return Text('no image');
+                    },
                   ),
-                );
-              },
-            ),
-            Text(userData.userName),
-            Container(
-              height: 400,
-              child: StreamBuilder<List<Photo>>(
-                stream: DbService(userName: userData.userName).userPosts,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return GridView.builder(
-                      itemCount: snapshot.data.length,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 1,
-                        mainAxisSpacing: 10,
-                      ),
-                      itemBuilder: (context, index) => CachedNetworkImage(
-                        imageUrl: snapshot.data[index]?.url,
-                      ),
-                    );
-                  } else {
-                    return CircularProgressIndicator();
-                  }
-                },
+                  RaisedButton(
+                    child: Text('Upload Profile Photo'),
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => TakePhoto(),
+                        ),
+                      );
+                    },
+                  ),
+                  Text(userData.userName),
+                  Container(
+                    height: 400,
+                    child: StreamBuilder<List<Photo>>(
+                      stream: DbService(userName: userData.userName).userPosts,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return GridView.builder(
+                            itemCount: snapshot.data.length,
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 1,
+                              mainAxisSpacing: 10,
+                            ),
+                            itemBuilder: (context, index) => CachedNetworkImage(
+                              progressIndicatorBuilder:
+                                  (context, url, downloadProgress) =>
+                                      CircularProgressIndicator(
+                                          value: downloadProgress.progress),
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.error),
+                              imageUrl: snapshot.data[index]?.url,
+                            ),
+                          );
+                        } else {
+                          return CircularProgressIndicator();
+                        }
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
-      ),
-    );
+          );
   }
 }

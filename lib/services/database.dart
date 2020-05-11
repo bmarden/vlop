@@ -108,12 +108,6 @@ class DbService {
   }
 
   Stream<List<Photo>> get userPosts {
-    // var userName = _userCollection
-    //     .document(uid)
-    //     .get()
-    //     .then((doc) => UserData.fromMap(doc.data))
-    //     .then((usr) => usr.userName);
-
     var photos = _imgCollection
         .where('userOwner', isEqualTo: userName)
         .snapshots()
@@ -136,16 +130,6 @@ class DbService {
           .then((snapshots) => snapshots.documents
               .map((snap) => Photo.fromFirestore(snap))
               .toList());
-      // var postIds = await _userCollection
-      //     .document(uid)
-      //     .get()
-      //     .then((doc) => doc.data['postIds']);
-
-      //   var results = await _imgCollection.getDocuments();
-      //   return results.documents
-      //       .where((map) => postIds.documents.contains(map.documentID))
-      //       .map((d) => Photo.fromFirestore(d))
-      //       .toList();
     } catch (e) {
       print(e);
       return null;
