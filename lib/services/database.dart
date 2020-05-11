@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:vlop/models/photo.dart';
 import 'package:vlop/models/user.dart';
+import 'dart:async';
 
 class DbService {
   final String uid;
@@ -81,6 +82,14 @@ class DbService {
         .document(uid)
         .get()
         .then((snap) => UserData.fromMap(snap.data));
+  }
+
+  Future<String> getUserIdByUserName(String userName) async {
+    var query = await _userCollection
+        .where('userName', isEqualTo: userName)
+        .getDocuments();
+    DocumentSnapshot docData = query.documents.single;
+    return docData.documentID;
   }
 
   /// Upload Image to Firebase storage and store Image Data in Firestore

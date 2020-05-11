@@ -24,20 +24,12 @@ class _ProfilePageState extends State<ProfilePage> {
         radius: 100,
       );
     }
-    return ClipOval(
-      child: Image.asset(
-        'assets/images/default.png',
-        width: 100,
-        height: 100,
-        fit: BoxFit.fill,
-        color: Colors.blueGrey[100],
-      ),
+    return CircleAvatar(
+      backgroundImage: AssetImage('assets/images/default.png'),
+      radius: 75,
+      backgroundColor: Colors.transparent,
     );
   }
-
-  // _getProfilePictures() {
-
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -53,15 +45,7 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  FutureBuilder(
-                    future: _downloadProfilePhoto(context, user.uid),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        return snapshot.data;
-                      }
-                      return Text('no image');
-                    },
-                  ),
+                  ProfilePic(),
                   RaisedButton(
                     child: Text('Upload Profile Photo'),
                     onPressed: () {
@@ -107,5 +91,46 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
           );
+  }
+}
+
+class ProfilePic extends StatelessWidget {
+  final String userId;
+  final double radius;
+  final Widget child;
+
+  const ProfilePic({Key key, this.userId, this.radius = 75, this.child})
+      : super(key: key);
+
+  Future<Widget> _downloadProfilePhoto(
+      BuildContext context, String userId) async {
+    final id = await DbService().getUserIdByUserName(userId);
+    final path = 'profile_images/${id}.png';
+    print(path);
+    var picUrl = await DbService(uid: id).downloadTask(path);
+    if (picUrl != null) {
+      return CircleAvatar(
+          backgroundImage: NetworkImage(picUrl), radius: radius);
+    }
+
+    return CircleAvatar(
+      backgroundImage: AssetImage('assets/images/default.png'),
+      radius: radius,
+      backgroundColor: Colors.transparent,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: _downloadProfilePhoto(context, userId),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return snapshot.data;
+        } else {
+          return CircularProgressIndicator();
+        }
+      },
+    );
   }
 }
