@@ -30,7 +30,8 @@ class AuthService {
   }
 
   // Create a new Firebase user
-  Future registerNewUser(String email, String userName, String password) async {
+  Future<dynamic> registerNewUser(String email, String userName,
+      String password, List<dynamic> tags) async {
     // Attempt to register new Firebase user
     try {
       var result = await _auth.createUserWithEmailAndPassword(
@@ -38,11 +39,11 @@ class AuthService {
       var newUser = result.user;
 
       // If Firebase registration successful, register user in 'users' collection
-      await DbService(uid: newUser.uid).updateUser(email, userName);
-      return _userFromFirebase(newUser);
+      await DbService(uid: newUser.uid).updateUser(email, userName, tags);
+      return true;
     } catch (e) {
-      print(e.toString());
-      return null;
+      print(e.message);
+      return e.message;
     }
   }
 

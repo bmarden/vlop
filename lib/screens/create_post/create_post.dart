@@ -24,7 +24,7 @@ class _CreatePostState extends State<CreatePost> {
       {BuildContext context}) async {
     final user = await DbService(uid: userUid).getUserDoc();
 
-    var picture = await ImagePicker.pickImage(source: source)
+    var picture = await ImagePicker.pickImage(source: source, imageQuality: 85)
         .catchError((onError) => (print(onError)));
 
     setState(() {
@@ -32,6 +32,7 @@ class _CreatePostState extends State<CreatePost> {
         id: Uuid().v1(),
         imageFile: picture,
         userOwner: user.userName,
+        ownerProfilePic: user.profileUrl,
         caption: '',
         tags: [],
       );

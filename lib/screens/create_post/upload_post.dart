@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:vlop/models/photo.dart';
@@ -41,7 +42,7 @@ class Upload extends StatelessWidget {
           color: Colors.white, fontSize: 19.0, fontWeight: FontWeight.w600),
     );
 
-    var _uploadTask;
+    StorageUploadTask _uploadTask;
     return Scaffold(
       appBar: AppBar(
         title: Text('Upload'),
@@ -66,9 +67,13 @@ class Upload extends StatelessWidget {
                   await _uploadTask.events.listen((data) {
                     var event = data?.snapshot;
                     var progressPercent = event != null
-                        ? event.bytesTransferred / event.totalByteCount
+                        ? (event.bytesTransferred / event.totalByteCount) * 100
                         : 0.0;
-                    pr.update(progress: progressPercent * 100);
+
+                    pr.update(
+                        progress:
+                            double.parse(progressPercent.toStringAsFixed(2)));
+
                     if (_uploadTask.isComplete) {
                       pr.hide().whenComplete(() => print(pr.isShowing()));
                       _addImageData();

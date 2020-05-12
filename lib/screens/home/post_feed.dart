@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vlop/models/photo.dart';
+import 'package:vlop/screens/profile/profile.dart';
 import 'package:vlop/utilities/loading.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class Feed extends StatelessWidget {
   @override
@@ -13,12 +15,12 @@ class Feed extends StatelessWidget {
             scrollDirection: Axis.vertical,
             itemCount: pics.length,
             itemBuilder: (context, index) {
-              return _imgTile(pics[index]);
+              return _imgTile(context, pics[index]);
             },
           );
   }
 
-  Widget _imgTile(Photo curPhoto) {
+  Widget _imgTile(context, Photo curPhoto) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12.0),
@@ -26,14 +28,45 @@ class Feed extends StatelessWidget {
       child: ListTile(
         title: Column(
           children: <Widget>[
-            Padding(
+            Container(
               padding: const EdgeInsets.all(10.0),
-              child: Text('posted by: ${curPhoto.userOwner}'),
+              child: Row(
+                children: <Widget>[
+                  ProfilePic(url: curPhoto.ownerProfilePic, radius: 20),
+                  Padding(padding: EdgeInsets.only(right: 20)),
+                  Text('posted by: ${curPhoto.userOwner}'),
+                ],
+              ),
             ),
-            Image.network(curPhoto?.url,
-                loadingBuilder: (context, child, progress) {
-              return progress == null ? child : CircularProgressIndicator();
-            }),
+            SizedBox(
+              height: 300.0,
+              child: Center(
+                child: CachedNetworkImage(
+                  imageUrl: curPhoto?.url,
+                  imageBuilder: (context, imageProvider) => Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.cover,
+                      ),
+                      border: Border.all(
+                        color: Colors.black,
+                        width: 2,
+                      ),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  progressIndicatorBuilder: (context, url, downloadProgress) =>
+                      CircularProgressIndicator(
+                          value: downloadProgress.progress),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
+                ),
+              ),
+            ),
+            Text('${curPhoto.caption}'),
+            SizedBox(
+              height: 20,
+            ),
           ],
         ),
       ),

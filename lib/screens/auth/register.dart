@@ -2,9 +2,11 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:string_validator/string_validator.dart';
 import 'package:vlop/services/auth_service.dart';
+import 'package:vlop/services/database.dart';
 import 'package:vlop/utilities/constants.dart';
 import 'package:vlop/utilities/loading.dart';
 import 'package:vlop/utilities/widgets.dart';
+import 'package:pedantic/pedantic.dart';
 
 class Register extends StatefulWidget {
   // Declare the function from auth_view. Will be used to change to login screen
@@ -17,13 +19,12 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
   final _formKey = GlobalKey<FormState>();
-  final AuthService _auth = AuthService();
 
   final TextEditingController _pass = TextEditingController();
   final TextEditingController _confirmPass = TextEditingController();
-
-  String _email;
   String _userName;
+  String _email;
+
   bool _loading = false;
   bool _validateState = false;
   String error = '';
@@ -33,32 +34,6 @@ class _RegisterState extends State<Register> {
     _pass.dispose();
     _confirmPass.dispose();
     super.dispose();
-  }
-
-  bool validateForm() {
-    final form = _formKey.currentState;
-    if (form.validate()) {
-      form.save();
-      return true;
-    }
-    return false;
-  }
-
-  void submitForm() async {
-    setState(() => _loading = true);
-    if (validateForm()) {
-      dynamic result = _auth.registerNewUser(_email, _userName, _pass.text);
-      if (result == null) {
-        print("ERROR: couldn't register user");
-      } else {
-        setState(() => _validateState = true);
-      }
-    } else {
-      setState(() {
-        _loading = false;
-        _validateState = false;
-      });
-    }
   }
 
   Widget _userNameTB() {
@@ -80,7 +55,7 @@ class _RegisterState extends State<Register> {
             }
             return null;
           },
-          onSaved: (value) => _userName = value.trim(),
+          onChanged: (value) => _userName = value.trim(),
         ),
       ],
     );
@@ -105,7 +80,7 @@ class _RegisterState extends State<Register> {
             }
             return null;
           },
-          onSaved: (value) => _email = value.trim(),
+          onChanged: (value) => _email = value.trim(),
         ),
       ],
     );
@@ -208,7 +183,25 @@ class _RegisterState extends State<Register> {
                           SizedBox(height: 25.0),
                           _passwordTB(true),
                           Button(
-                            onPressed: submitForm,
+                            onPressed: () async {
+                              if (_formKey.currentState.validate()) {
+                                setState(() => _loading = true);
+                                var tags =
+                                    await DbService().getMostCommonTags();
+                                setState(() => _loading = false);
+                                unawaited(
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => RegisterPageTwo(
+                                          tags, _userName, _email, _pass.text),
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                setState(() => _validateState = true);
+                              }
+                            },
                             child: Text(
                               'Submit',
                               style: kLabelStyle,
@@ -219,6 +212,137 @@ class _RegisterState extends State<Register> {
                       ),
                     ),
                   ),
+                ),
+              ],
+            ),
+          );
+  }
+}
+
+class RegisterPageTwo extends StatefulWidget {
+  final List<dynamic> tags;
+  final String userName;
+  final String email;
+  final String password;
+  RegisterPageTwo(this.tags, this.userName, this.email, this.password);
+  @override
+  _RegisterPageTwoState createState() => _RegisterPageTwoState();
+}
+
+class _RegisterPageTwoState extends State<RegisterPageTwo> {
+  final AuthService _auth = AuthService();
+  var btags = {};
+  bool _loading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.tags.forEach((m) => btags[m] = false);
+  }
+
+  Future<void> submitForm(context) async {
+    setState(() => _loading = true);
+    var likedTags = [];
+    btags.forEach((key, value) {
+      if (value) {
+        likedTags.add(key);
+      }
+    });
+    dynamic result = await _auth.registerNewUser(
+        widget.email, widget.userName, widget.password, likedTags);
+    if (result == true) {
+      print('registration successful...');
+      Navigator.of(context).popUntil((route) => route.isFirst);
+    } else {
+      setState(() => _loading = false);
+      _buildErrorDialog(context, result);
+    }
+  }
+
+  void _buildErrorDialog(BuildContext context, _message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Error Message'),
+          content: Text(_message),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _loading
+        ? Loading()
+        : Scaffold(
+            appBar: AppBar(),
+            body: Stack(
+              children: <Widget>[
+                Container(
+                  decoration: kBoxGradient,
+                ),
+                Column(
+                  children: <Widget>[
+                    Align(
+                      alignment: Alignment.center,
+                      heightFactor: 5,
+                      child: Text(
+                        'Select some things that interest you',
+                        style: Theme.of(context).textTheme.headline6,
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        'Here are some popular tags to choose from.',
+                        style: Theme.of(context).textTheme.subtitle2,
+                      ),
+                    ),
+                    Container(
+                      height: 250.0,
+                      child: Wrap(
+                        spacing: 5.0,
+                        children: <Widget>[
+                          for (var val in widget.tags) ...[
+                            Padding(
+                              padding: EdgeInsets.all(4),
+                              child: FilterChip(
+                                label: Text(val),
+                                labelStyle: TextStyle(
+                                  color:
+                                      btags[val] ? Colors.black : Colors.white,
+                                ),
+                                selectedColor: Theme.of(context).accentColor,
+                                checkmarkColor: Colors.black,
+                                selected: btags[val],
+                                onSelected: (bool select) {
+                                  setState(() {
+                                    btags[val] = !btags[val];
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                    Button(
+                      child: Text('Finish Registration'),
+                      width: 200,
+                      onPressed: () async {
+                        await submitForm(context);
+                      },
+                    )
+                  ],
                 ),
               ],
             ),
