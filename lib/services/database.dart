@@ -88,8 +88,7 @@ class DbService {
     var query = await _userCollection
         .where('userName', isEqualTo: userName)
         .getDocuments();
-    DocumentSnapshot docData = query.documents.single;
-    return docData.documentID;
+    return query.documents.single.documentID;
   }
 
   /// Upload Image to Firebase storage and store Image Data in Firestore

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vlop/models/photo.dart';
-import 'package:vlop/models/user.dart';
 import 'package:vlop/screens/profile/profile.dart';
 import 'package:vlop/utilities/loading.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -22,7 +21,6 @@ class Feed extends StatelessWidget {
   }
 
   Widget _imgTile(context, Photo curPhoto) {
-    var user = Provider.of<User>(context);
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12.0),
@@ -34,7 +32,7 @@ class Feed extends StatelessWidget {
               padding: const EdgeInsets.all(10.0),
               child: Row(
                 children: <Widget>[
-                  ProfilePic(userId: curPhoto.userOwner, radius: 20),
+                  ProfilePic(userName: curPhoto.userOwner, radius: 20),
                   Padding(padding: EdgeInsets.only(right: 20)),
                   Text('posted by: ${curPhoto.userOwner}'),
                 ],
@@ -53,7 +51,7 @@ class Feed extends StatelessWidget {
                       ),
                       border: Border.all(
                         color: Colors.black,
-                        width: 4,
+                        width: 2,
                       ),
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -65,6 +63,7 @@ class Feed extends StatelessWidget {
                 ),
               ),
             ),
+            Text('${curPhoto.caption}'),
             SizedBox(
               height: 20,
             ),

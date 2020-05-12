@@ -14,26 +14,9 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   // Gets a profile photo from Firebase
-  Future<Widget> _downloadProfilePhoto(
-      BuildContext context, String userId) async {
-    final path = 'profile_images/${userId}.png';
-    var picUrl = await DbService(uid: userId).downloadTask(path);
-    if (picUrl != null) {
-      return CircleAvatar(
-        backgroundImage: NetworkImage(picUrl),
-        radius: 100,
-      );
-    }
-    return CircleAvatar(
-      backgroundImage: AssetImage('assets/images/default.png'),
-      radius: 75,
-      backgroundColor: Colors.transparent,
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User>(context);
     final userData = Provider.of<UserData>(context);
     return userData == null
         ? Loading()
@@ -45,7 +28,7 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  ProfilePic(),
+                  ProfilePic(userName: userData.userName),
                   RaisedButton(
                     child: Text('Upload Profile Photo'),
                     onPressed: () {
@@ -95,11 +78,11 @@ class _ProfilePageState extends State<ProfilePage> {
 }
 
 class ProfilePic extends StatelessWidget {
-  final String userId;
+  final String userName;
   final double radius;
   final Widget child;
 
-  const ProfilePic({Key key, this.userId, this.radius = 75, this.child})
+  const ProfilePic({Key key, this.userName, this.radius = 75, this.child})
       : super(key: key);
 
   Future<Widget> _downloadProfilePhoto(
@@ -123,7 +106,7 @@ class ProfilePic extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: _downloadProfilePhoto(context, userId),
+      future: _downloadProfilePhoto(context, userName),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           return snapshot.data;
