@@ -138,19 +138,25 @@ class DbService {
   }
 
   /// Upload Image to Firebase storage and store Image Data in Firestore
-  StorageUploadTask uploadTask(Photo img, String userId) {
-    var path = 'images/${img.id}.png';
-    _addPostToUserData(userId, img.id);
-    // Save the postId to the user's Posts array in their document
-    return _storage.ref().child(path).putFile(img.imageFile);
+  StorageUploadTask uploadTask(Photo img, String userId, bool postImg) {
+    // If postImg true, save the Photo to the images/ path in Firebase storage
+    if (postImg) {
+      // Save the postId to the user's Posts array in their document
+      _addPostToUserData(userId, img.id);
+      return _storage
+          .ref()
+          .child('images/${img.id}.png')
+          .putFile(img.imageFile);
+    } else {
+      // if postImg false, save image to profile_images/ path in Firebase storage.
+      return _storage
+          .ref()
+          .child('profile_images/${userId}.png')
+          .putFile(img.imageFile);
+    }
   }
 
-  StorageUploadTask uploadTaskProfile(Photo img, String userId) {
-    var path = 'profile_images/${userId}.png';
-    return _storage.ref().child(path).putFile(img.imageFile);
-  }
-
-  // Gets single photo from firebase
+  /// Get a single URL from Firebase storage based on a path
   Future getDownloadURLFromFirebase(String path) async {
     try {
       var result = await _storage.ref().child(path).getDownloadURL();
@@ -161,6 +167,7 @@ class DbService {
     }
   }
 
+  /// Stream of ImageData from Firestore, filtered by a user name
   Stream<List<Photo>> get userPosts {
     var photos = _imgCollection
         .where('userOwner', isEqualTo: userName)
@@ -171,7 +178,7 @@ class DbService {
     return photos;
   }
 
-  // Get a list of postIds and then returns the urls from Firebase Storage
+  /// Gets a list of ImageData from Firestore which referenced photos. Future version of userPosts
   Future<List<Photo>> getUserPosts() async {
     try {
       var doc = await _userCollection
