@@ -62,7 +62,7 @@ class Upload extends StatelessWidget {
                 ),
                 onPressed: () async {
                   await pr.show();
-                  _uploadTask = DbService().uploadTask(photo, userId);
+                  _uploadTask = DbService().uploadTask(photo, userId, true);
 
                   await _uploadTask.events.listen((data) {
                     var event = data?.snapshot;

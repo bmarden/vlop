@@ -20,7 +20,7 @@ class _UploadState extends State<Upload> {
   void _startUpload() async {
     setState(() {
       _uploadImage =
-          DbService().uploadTaskProfile(widget.photo, widget.user.uid);
+          DbService().uploadTask(widget.photo, widget.user.uid, false);
     });
     await _uploadImage.onComplete;
     await _addPicUrl();

@@ -86,10 +86,6 @@ class ProfilePic extends StatelessWidget {
       : super(key: key);
 
   Future<Widget> _getProfilePic(BuildContext context) async {
-    // final id = await DbService().getUserIdByUserName(userId);
-    // final path = 'profile_images/${id}.png';
-    // print(path);
-
     var picUrl = await DbService(uid: userId)
         .getDownloadURLFromFirebase('profile_images/${userId}.png');
     if (picUrl != null) {
