@@ -86,6 +86,20 @@ class _HomePageState extends State<HomePage> {
                 decoration: kBoxGradient,
               ),
               ListTile(
+                leading: Icon(Icons.person),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => ProfilePage(),
+                    ),
+                  );
+                },
+                title: Text(
+                  'Profile Page',
+                  style: kLabelStyle,
+                ),
+              ),
+              ListTile(
                 leading: Icon(Icons.exit_to_app),
                 onTap: () async {
                   Navigator.pop(context);

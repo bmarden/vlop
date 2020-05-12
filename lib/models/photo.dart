@@ -5,7 +5,6 @@ class Photo {
   final String id;
   final String userOwner;
   final String ownerId;
-  // final String ownerProfilePic;
   List<dynamic> tags;
   String caption;
   final String url;
@@ -14,7 +13,6 @@ class Photo {
   Photo({
     this.imageFile,
     this.userOwner,
-    // this.ownerProfilePic,
     this.ownerId,
     this.tags,
     this.caption,
@@ -31,7 +29,6 @@ class Photo {
     return Photo(
       id: doc.documentID,
       userOwner: data['userOwner'] ?? '',
-      // ownerProfilePic: data['ownerProfilePic'],
       ownerId: data['ownerId'],
       tags: data['tags'] as List ?? [],
       caption: data['caption'] ?? '',
