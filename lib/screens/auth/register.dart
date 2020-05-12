@@ -255,8 +255,28 @@ class _RegisterPageTwoState extends State<RegisterPageTwo> {
       Navigator.of(context).popUntil((route) => route.isFirst);
     } else {
       setState(() => _loading = false);
-      print('ERROR: Registration failed');
+      _buildErrorDialog(context, result);
     }
+  }
+
+  void _buildErrorDialog(BuildContext context, _message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Error Message'),
+          content: Text(_message),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
+      },
+    );
   }
 
   @override
