@@ -208,7 +208,14 @@ class _RegisterState extends State<Register> {
                           SizedBox(height: 25.0),
                           _passwordTB(true),
                           Button(
-                            onPressed: submitForm,
+                            // onPressed: submitForm,
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => RegisterPageTwo()),
+                              );
+                            },
                             child: Text(
                               'Submit',
                               style: kLabelStyle,
@@ -223,5 +230,86 @@ class _RegisterState extends State<Register> {
               ],
             ),
           );
+  }
+}
+
+class RegisterPageTwo extends StatefulWidget {
+  @override
+  _RegisterPageTwoState createState() => _RegisterPageTwoState();
+}
+
+class _RegisterPageTwoState extends State<RegisterPageTwo> {
+  var tags = [
+    'cats',
+    'cars',
+    'some other thing',
+    'sports',
+  ];
+
+  var btags = {};
+
+  @override
+  void initState() {
+    super.initState();
+    tags.forEach((m) => btags[m] = false);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(),
+      body: Stack(
+        children: <Widget>[
+          Container(
+            decoration: kBoxGradient,
+          ),
+          Column(
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(height: 300),
+                  Container(
+                    child: Text('Select some things that interest you',
+                        style: Theme.of(context).textTheme.headline6),
+                  ),
+                ],
+              ),
+              Container(
+                height: 150.0,
+                child: Wrap(
+                  children: <Widget>[
+                    for (var val in tags) ...[
+                      Padding(
+                        padding: EdgeInsets.all(4),
+                        child: FilterChip(
+                          label: Text(val),
+                          labelStyle: TextStyle(
+                            color: btags[val] ? Colors.black : Colors.white,
+                          ),
+                          selectedColor: Theme.of(context).accentColor,
+                          checkmarkColor: Colors.black,
+                          selected: btags[val],
+                          onSelected: (bool select) {
+                            setState(() {
+                              btags[val] = !btags[val];
+                            });
+                          },
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+              Button(
+                child: Text('Finish Registration'),
+                width: 200,
+                onPressed: () {},
+              )
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }
