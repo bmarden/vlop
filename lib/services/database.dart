@@ -43,6 +43,7 @@ class DbService {
   /// Add data about image to imageData collection
   Future<void> addImageDataToCollections(Photo img, String path) async {
     var downloadUrl = await _storage.ref().child(path).getDownloadURL();
+    await _addTagListToCollection(img.tags);
     return _imgCollection.document(img.id).setData({
       'userOwner': img.userOwner,
       'tags': FieldValue.arrayUnion(img.tags),
@@ -50,6 +51,18 @@ class DbService {
       'path': path,
       'caption': img.caption,
     }).catchError((e) => print(e.message));
+  }
+
+  /// Add the list of tags to the correct collection
+  Future<void> _addTagListToCollection(List<dynamic> tags) async {
+    var tagCollection = Firestore.instance.collection('tags');
+
+    for (var tag in tags) {
+      await tagCollection.document(tag).setData({
+        'name': tag,
+        'referenced': FieldValue.increment(1),
+      }, merge: true);
+    }
   }
 
   /// Returns a stream of UserData if a user is logged in
