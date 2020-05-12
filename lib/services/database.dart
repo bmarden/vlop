@@ -26,10 +26,15 @@ class DbService {
   final CollectionReference _imgCollection =
       Firestore.instance.collection('imageData');
 
-  Future updateUser(String email, String userName) async {
+  // Instantiate reference to Firebase tags collection
+  final CollectionReference _tagCollection =
+      Firestore.instance.collection('tags');
+
+  Future updateUser(String email, String userName, List<dynamic> tags) async {
     return await _userCollection.document(uid).setData({
       'email': email,
       'userName': userName,
+      'likedTags': tags,
     });
   }
 
@@ -55,10 +60,8 @@ class DbService {
 
   /// Add the list of tags to the correct collection
   Future<void> _addTagListToCollection(List<dynamic> tags) async {
-    var tagCollection = Firestore.instance.collection('tags');
-
     for (var tag in tags) {
-      await tagCollection.document(tag).setData({
+      await _tagCollection.document(tag).setData({
         'name': tag,
         'referenced': FieldValue.increment(1),
       }, merge: true);
@@ -89,7 +92,7 @@ class DbService {
         );
   }
 
-  // Get a single document by user id
+  /// Get a single document by user id
   Future<UserData> getUserDoc() {
     return _userCollection
         .document(uid)
@@ -97,6 +100,22 @@ class DbService {
         .then((snap) => UserData.fromMap(snap.data));
   }
 
+  /// Get a list of most referenced tags
+  Future getMostCommonTags() async {
+    var tagList = [];
+    var query = await _tagCollection
+        .orderBy('referenced', descending: true)
+        .limit(10)
+        .getDocuments();
+
+    query.documents.forEach(
+      (doc) => tagList.add(doc.data['name']),
+    );
+
+    return tagList;
+  }
+
+  /// Gets a user Id by their user name
   Future<String> getUserIdByUserName(String userName) async {
     var query = await _userCollection
         .where('userName', isEqualTo: userName)
