@@ -25,7 +25,7 @@ class UserData {
       userName: data['userName'] ?? '',
       postIds: data['postIds'] as List ?? [],
       likedTags: data['likedTags'] as List ?? [],
-      profileUrl: data['profileUrl'] ?? '',
+      profileUrl: data['profileUrl'],
     );
   }
 }

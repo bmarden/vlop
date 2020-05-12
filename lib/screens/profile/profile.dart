@@ -28,7 +28,7 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  ProfilePic(userName: userData.userName),
+                  ProfilePic(url: userData.profileUrl),
                   RaisedButton(
                     child: Text('Upload Profile Photo'),
                     onPressed: () {
@@ -65,7 +65,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                           );
                         } else {
-                          return CircularProgressIndicator();
+                          return Loading();
                         }
                       },
                     ),
@@ -78,22 +78,21 @@ class _ProfilePageState extends State<ProfilePage> {
 }
 
 class ProfilePic extends StatelessWidget {
-  final String userName;
+  final String url;
   final double radius;
   final Widget child;
 
-  const ProfilePic({Key key, this.userName, this.radius = 75, this.child})
+  const ProfilePic({Key key, this.url, this.radius = 75, this.child})
       : super(key: key);
 
-  Future<Widget> _downloadProfilePhoto(
-      BuildContext context, String userId) async {
-    final id = await DbService().getUserIdByUserName(userId);
-    final path = 'profile_images/${id}.png';
-    print(path);
-    var picUrl = await DbService(uid: id).downloadTask(path);
-    if (picUrl != null) {
-      return CircleAvatar(
-          backgroundImage: NetworkImage(picUrl), radius: radius);
+  Future<Widget> _getProfilePic(BuildContext context) async {
+    // final id = await DbService().getUserIdByUserName(userId);
+    // final path = 'profile_images/${id}.png';
+    // print(path);
+
+    // var picUrl = await DbService(uid: id).downloadTask(path);
+    if (url != null) {
+      return CircleAvatar(backgroundImage: NetworkImage(url), radius: radius);
     }
 
     return CircleAvatar(
@@ -106,7 +105,7 @@ class ProfilePic extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: _downloadProfilePhoto(context, userName),
+      future: _getProfilePic(context),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           return snapshot.data;

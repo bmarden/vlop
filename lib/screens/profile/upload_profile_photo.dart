@@ -17,11 +17,18 @@ class Upload extends StatefulWidget {
 class _UploadState extends State<Upload> {
   StorageUploadTask _uploadImage;
 
-  void _startUpload() {
+  void _startUpload() async {
     setState(() {
       _uploadImage =
           DbService().uploadTaskProfile(widget.photo, widget.user.uid);
     });
+    await _uploadImage.onComplete;
+    await _addPicUrl();
+  }
+
+  Future<void> _addPicUrl() async {
+    await DbService().addProfilePicUrlToUserData(
+        widget.user.uid, 'profile_images/${widget.user.uid}.png');
   }
 
   @override
@@ -43,6 +50,7 @@ class _UploadState extends State<Upload> {
                   Text('Upload Complete!'),
                 if (_uploadImage.isInProgress) ...[
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       FlatButton(
                         child: Icon(Icons.cancel),
@@ -76,7 +84,6 @@ class _UploadState extends State<Upload> {
             child: Text(
               'Upload',
             ),
-            color: Colors.blue[700],
             onPressed: _startUpload,
           ),
         ],

@@ -45,12 +45,20 @@ class DbService {
     }, merge: true).catchError((e) => print(e.message));
   }
 
+  Future<void> addProfilePicUrlToUserData(String userId, String path) async {
+    var url = await _storage.ref().child(path).getDownloadURL();
+    return _userCollection.document(userId).setData({
+      'profileUrl': url,
+    }, merge: true).catchError((e) => print(e.message));
+  }
+
   /// Add data about image to imageData collection
   Future<void> addImageDataToCollections(Photo img, String path) async {
     var downloadUrl = await _storage.ref().child(path).getDownloadURL();
     await _addTagListToCollection(img.tags);
     return _imgCollection.document(img.id).setData({
       'userOwner': img.userOwner,
+      'ownerProfilePic': img?.ownerProfilePic,
       'tags': FieldValue.arrayUnion(img.tags),
       'url': downloadUrl,
       'path': path,
@@ -117,10 +125,15 @@ class DbService {
 
   /// Gets a user Id by their user name
   Future<String> getUserIdByUserName(String userName) async {
-    var query = await _userCollection
-        .where('userName', isEqualTo: userName)
-        .getDocuments();
-    return query.documents.single.documentID;
+    try {
+      var query = await _userCollection
+          .where('userName', isEqualTo: userName)
+          .getDocuments();
+      return query.documents.single.documentID;
+    } catch (e) {
+      print(e.message);
+    }
+    return '';
   }
 
   /// Upload Image to Firebase storage and store Image Data in Firestore
@@ -131,7 +144,6 @@ class DbService {
     return _storage.ref().child(path).putFile(img.imageFile);
   }
 
-  // TODO Merge with uploadTask
   StorageUploadTask uploadTaskProfile(Photo img, String userId) {
     var path = 'profile_images/${userId}.png';
     return _storage.ref().child(path).putFile(img.imageFile);
@@ -140,9 +152,10 @@ class DbService {
   // Gets single photo from firebase
   Future downloadTask(String path) async {
     try {
-      return await _storage.ref().child(path).getDownloadURL();
+      var result = await _storage.ref().child(path).getDownloadURL();
+      return result;
     } catch (e) {
-      print(e);
+      print('User doesn\'t have profile image, or the url is bad');
       return null;
     }
   }
