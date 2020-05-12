@@ -32,7 +32,7 @@ class Feed extends StatelessWidget {
               padding: const EdgeInsets.all(10.0),
               child: Row(
                 children: <Widget>[
-                  ProfilePic(url: curPhoto.ownerProfilePic, radius: 20),
+                  ProfilePic(userId: curPhoto.ownerId, radius: 20),
                   Padding(padding: EdgeInsets.only(right: 20)),
                   Text('posted by: ${curPhoto.userOwner}'),
                 ],

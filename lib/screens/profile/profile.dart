@@ -28,7 +28,7 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  ProfilePic(url: userData.profileUrl),
+                  ProfilePic(userId: userData.id),
                   RaisedButton(
                     child: Text('Upload Profile Photo'),
                     onPressed: () {
@@ -78,11 +78,11 @@ class _ProfilePageState extends State<ProfilePage> {
 }
 
 class ProfilePic extends StatelessWidget {
-  final String url;
+  final String userId;
   final double radius;
   final Widget child;
 
-  const ProfilePic({Key key, this.url, this.radius = 75, this.child})
+  const ProfilePic({Key key, this.userId, this.radius = 75, this.child})
       : super(key: key);
 
   Future<Widget> _getProfilePic(BuildContext context) async {
@@ -90,9 +90,11 @@ class ProfilePic extends StatelessWidget {
     // final path = 'profile_images/${id}.png';
     // print(path);
 
-    // var picUrl = await DbService(uid: id).downloadTask(path);
-    if (url != null) {
-      return CircleAvatar(backgroundImage: NetworkImage(url), radius: radius);
+    var picUrl = await DbService(uid: userId)
+        .getDownloadURLFromFirebase('profile_images/${userId}.png');
+    if (picUrl != null) {
+      return CircleAvatar(
+          backgroundImage: NetworkImage(picUrl), radius: radius);
     }
 
     return CircleAvatar(

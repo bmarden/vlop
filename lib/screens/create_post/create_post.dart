@@ -32,7 +32,7 @@ class _CreatePostState extends State<CreatePost> {
         id: Uuid().v1(),
         imageFile: picture,
         userOwner: user.userName,
-        ownerProfilePic: user.profileUrl,
+        ownerId: user.id,
         caption: '',
         tags: [],
       );

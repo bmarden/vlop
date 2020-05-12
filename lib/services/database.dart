@@ -58,7 +58,8 @@ class DbService {
     await _addTagListToCollection(img.tags);
     return _imgCollection.document(img.id).setData({
       'userOwner': img.userOwner,
-      'ownerProfilePic': img?.ownerProfilePic,
+      'ownerId': img?.ownerId,
+      // 'ownerProfilePic': img?.ownerProfilePic,
       'tags': FieldValue.arrayUnion(img.tags),
       'url': downloadUrl,
       'path': path,
@@ -86,7 +87,7 @@ class DbService {
         // Return a stream of data that can be used for user information in the app
         return _userDoc
             .snapshots()
-            .map((snaps) => UserData.fromMap(snaps.data));
+            .map((snaps) => UserData.fromFirestore(snaps));
       } else {
         return Stream<UserData>.value(null);
       }
@@ -105,7 +106,7 @@ class DbService {
     return _userCollection
         .document(uid)
         .get()
-        .then((snap) => UserData.fromMap(snap.data));
+        .then((snap) => UserData.fromFirestore(snap));
   }
 
   /// Get a list of most referenced tags
@@ -150,7 +151,7 @@ class DbService {
   }
 
   // Gets single photo from firebase
-  Future downloadTask(String path) async {
+  Future getDownloadURLFromFirebase(String path) async {
     try {
       var result = await _storage.ref().child(path).getDownloadURL();
       return result;
@@ -176,7 +177,7 @@ class DbService {
       var doc = await _userCollection
           .document(uid)
           .get()
-          .then((doc) => UserData.fromMap(doc.data));
+          .then((doc) => UserData.fromFirestore(doc));
       return _imgCollection
           .where('userOwner', isEqualTo: doc.userName)
           .getDocuments()
