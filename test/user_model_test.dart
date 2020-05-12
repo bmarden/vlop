@@ -24,20 +24,5 @@ void main() {
       expect(newUser.userName, 'testUser');
       expect(newUser.email, 'testUser@email.com');
     });
-    test('fromMap', () async {
-      var user = UserData.fromMap(await userData());
-      expect(user.email, 'testuser@email.com');
-      expect(user.userName, 'testUser');
-      expect(user.postIds, ['id1', 'id2', 'id3']);
-    });
   });
-}
-
-dynamic userData() async {
-  var data = {
-    'userName': 'testUser',
-    'email': 'testuser@email.com',
-    'postIds': ['id1', 'id2', 'id3']
-  };
-  return data;
 }
